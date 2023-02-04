@@ -25,12 +25,25 @@
     "scripts": {
         "start": "node index.js",
         "test": "jest --coverage",
-        "localServer": "node index_local.js",
-        "APItest": "node APItest.js"
+        "localServer": "node index_local.js"
     },
-    "name": "registercheckbot",
+    "name": "reserve-process-website",
     "version": "1.0.0",
-    "author": "",
-    "license": "ISC",
-    "type": "module"
+    "author": "chenp6",
+    "license": "MIT",
+    "type": "module",
+    "description": "各校備取進度查詢 (目前有支援交大、成大、中正、中央)\r # Demo\r https://reserve-process-checker.vercel.app/",
+    "main": "index.js",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/chenp6/reserveProcessCheckerWebsite.git"
+    },
+    "keywords": [
+        "reserve",
+        "process"
+    ],
+    "bugs": {
+        "url": "https://github.com/chenp6/reserveProcessCheckerWebsite/issues"
+    },
+    "homepage": "https://github.com/chenp6/reserveProcessCheckerWebsite#readme"
 }
