@@ -178,7 +178,7 @@
                     preStatus = status;
                     document.getElementById('loadingPage').style.display = "none";
                     document.getElementById('loadedPage').style.display = "block";
-                    if (onConnected == null) {
+                    if (onConnected != null) {
                         onConnected();
                     }
                 }
