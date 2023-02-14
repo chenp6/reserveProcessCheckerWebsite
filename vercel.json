@@ -20,8 +20,10 @@
         {
             "src": "/css/loadingHamster.css",
             "dest": "public/css/loadingHamster.css"
-        },
-        {
+        }, {
+            "src": "/LICENSE",
+            "dest": "LICENSE"
+        }, {
             "src": "/(.+)",
             "dest": "/"
         }
