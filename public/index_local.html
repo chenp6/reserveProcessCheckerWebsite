@@ -77,10 +77,12 @@
         let groupInfo = new Map();
         const urlHeader = "http://127.0.0.1:3000"
 
-        checkDatabaseConnection();
+        checkDatabaseConnection(() => {
+            console.log("data loaded!")
+        });
         reset();
 
-        function checkDatabaseConnection(onConnected) {
+        function checkDatabaseConnection(onConnected = null) {
             document.getElementById('loadedPage').style.display = "none";
             document.getElementById('loadingPage').style.display = "flex";
             let preStatus = "closed";
@@ -95,7 +97,9 @@
                     preStatus = status;
                     document.getElementById('loadingPage').style.display = "none";
                     document.getElementById('loadedPage').style.display = "block";
-                    onConnected();
+                    if (onConnected == null) {
+                        onConnected();
+                    }
                 }
             }, 1000)
         }
@@ -184,7 +188,9 @@
                 checkDatabaseConnection(() => {
                     getUserRank();
                 });
+                return;
             }
+
             const result = document.getElementById("result");
             const userRank = await res.json();
             if (userRank == null)
@@ -192,6 +198,20 @@
             else {
                 result.innerText = `名次:${userRank.rank} , 報到狀況:${userRank.status}`;
             }
+
+
+            const updateTimeUrl = urlHeader + `/getUpdateTime?school=${selectedSchool}`;
+            const updateTimeRes = await fetch(updateTimeUrl, {
+                method: 'GET',
+            })
+            if (updateTimeRes.status == 500) {
+                return;
+            }
+            const updateTime = await updateTimeRes.json();
+            if (updateTime != null) {
+                result.innerText += `\n更新時間:${updateTime.time}`;
+            }
+
         }
 
         async function getReserveProcess() {
@@ -204,6 +224,18 @@
             }
             const groupInput = document.getElementById("groupInput");
             result.innerText = groupInfo.get(selectedGroup);
+
+            const updateTimeUrl = urlHeader + `/getUpdateTime?school=${selectedSchool}`;
+            const updateTimeRes = await fetch(updateTimeUrl, {
+                method: 'GET',
+            })
+            if (updateTimeRes.status == 500) {
+                return;
+            }
+            const updateTime = await updateTimeRes.json();
+            if (updateTime != null) {
+                result.innerText += `\n更新時間:${updateTime.time}`;
+            }
         }
     </script>
 </body>

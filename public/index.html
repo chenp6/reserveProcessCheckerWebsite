@@ -80,7 +80,7 @@
         checkDatabaseConnection();
         reset();
 
-        function checkDatabaseConnection(onConnected) {
+        function checkDatabaseConnection(onConnected = null) {
             document.getElementById('loadedPage').style.display = "none";
             document.getElementById('loadingPage').style.display = "flex";
             let preStatus = "closed";
@@ -95,7 +95,9 @@
                     preStatus = status;
                     document.getElementById('loadingPage').style.display = "none";
                     document.getElementById('loadedPage').style.display = "block";
-                    onConnected();
+                    if (onConnected == null) {
+                        onConnected();
+                    }
                 }
             }, 1000)
         }
@@ -199,6 +201,18 @@
             else {
                 result.innerText = `名次:${userRank.rank} , 報到狀況:${userRank.status}`;
             }
+
+            const updateTimeUrl = urlHeader + `/getUpdateTime?school=${selectedSchool}`;
+            const updateTimeRes = await fetch(updateTimeUrl, {
+                method: 'GET',
+            })
+            if (updateTimeRes.status == 500) {
+                return;
+            }
+            const updateTime = await updateTimeRes.json();
+            if (updateTime != null) {
+                result.innerText += `\n更新時間:${updateTime.time}`;
+            }
         }
 
         async function getReserveProcess() {
@@ -211,6 +225,18 @@
             }
             const groupInput = document.getElementById("groupInput");
             result.innerText = groupInfo.get(selectedGroup);
+
+            const updateTimeUrl = urlHeader + `/getUpdateTime?school=${selectedSchool}`;
+            const updateTimeRes = await fetch(updateTimeUrl, {
+                method: 'GET',
+            })
+            if (updateTimeRes.status == 500) {
+                return;
+            }
+            const updateTime = await updateTimeRes.json();
+            if (updateTime != null) {
+                result.innerText += `\n更新時間:${updateTime.time}`;
+            }
         }
     </script>
 </body>

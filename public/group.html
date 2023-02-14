@@ -163,7 +163,7 @@
         reset();
         const urlHeader = "."
 
-        function checkDatabaseConnection(onConnected) {
+        function checkDatabaseConnection(onConnected = null) {
             document.getElementById('loadedPage').style.display = "none";
             document.getElementById('loadingPage').style.display = "flex";
 
@@ -179,7 +179,9 @@
                     preStatus = status;
                     document.getElementById('loadingPage').style.display = "none";
                     document.getElementById('loadedPage').style.display = "block";
-                    onConnected();
+                    if (onConnected == null) {
+                        onConnected();
+                    }
                 }
             }, 1000)
         }

@@ -164,7 +164,7 @@
         reset();
         const urlHeader = "http://127.0.0.1:3000"
 
-        function checkDatabaseConnection(onConnected) {
+        function checkDatabaseConnection(onConnected = null) {
             document.getElementById('loadedPage').style.display = "none";
             let preStatus = "closed";
             const statusGetter = setInterval(async() => {
@@ -178,7 +178,9 @@
                     preStatus = status;
                     document.getElementById('loadingPage').style.display = "none";
                     document.getElementById('loadedPage').style.display = "block";
-                    onConnected();
+                    if (onConnected == null) {
+                        onConnected();
+                    }
                 }
             }, 1000)
         }

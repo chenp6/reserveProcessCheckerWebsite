@@ -9,6 +9,7 @@ let connectStatus = "closed";
 let examTable;
 let groupTable;
 let processTable;
+let updateTimeTable;
 const uri = process.env.MONGODB_URL;
 
 // Create a new MongoClient
@@ -29,6 +30,8 @@ async function run() {
     examTable = await db.collection("exam", { tls: true });
     groupTable = await db.collection("group", { tls: true });
     processTable = await db.collection("process", { tls: true });
+    updateTimeTable = await db.collection("update time", { tls: true });
+
     connectStatus = "ok";
     console.log(new Date() + "資料庫資料完成連接")
 }
@@ -97,6 +100,17 @@ app.get("/getStatus", async(req, res) => {
     //user rank
     try {
         return res.status(200).json({ status: connectStatus })
+    } catch (error) {
+        return res.status(500).json({
+            result: null
+        })
+    }
+});
+
+app.get("/getUpdateTime", async(req, res) => {
+
+    try {
+        return res.status(200).json(await updateTimeTable.findOne({ school: req.query.school }));
     } catch (error) {
         return res.status(500).json({
             result: null
