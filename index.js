@@ -106,7 +106,6 @@ app.get("/getStatus", async(req, res) => {
 });
 
 app.get("/getUpdateTime", async(req, res) => {
-
     try {
         return res.status(200).json(await updateTimeTable.findOne({ school: req.query.school }));
     } catch (error) {
