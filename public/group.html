@@ -154,13 +154,27 @@
                     <tbody id="resultListTableBody">
                     </tbody>
                 </table>
+                <div id="updateTime"></div>
             </div>
         </div>
     </div>
 
     <script>
-        checkDatabaseConnection();
+        checkDatabaseConnection(async function getUpdateTime() {
+            const updateTimeUrl = urlHeader + `/getUpdateTime?school=all`;
+            const updateTimeRes = await fetch(updateTimeUrl, {
+                method: 'GET',
+            })
+            if (updateTimeRes.status == 500) {
+                return;
+            }
+            const updateTime = await updateTimeRes.json();
+            document.getElementById("updateTime").innerText = `更新時間:${updateTime.time}`
+        });
+
         reset();
+
+
         const urlHeader = "."
 
         function checkDatabaseConnection(onConnected = null) {
