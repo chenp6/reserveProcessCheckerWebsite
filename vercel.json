@@ -21,8 +21,8 @@
             "src": "/css/loadingHamster.css",
             "dest": "public/css/loadingHamster.css"
         }, {
-            "src": "/LICENSE",
-            "dest": "LICENSE"
+            "src": "/LICENSE.txt",
+            "dest": "LICENSE.txt"
         }, {
             "src": "/(.+)",
             "dest": "/"
