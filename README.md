@@ -13,7 +13,7 @@ https://reserve-process-checker.vercel.app/
 3. 選擇系組
 4. 按下【查詢系組備取進度】
 5. 完成!顯示該系組目前的備取進度於紅線處
-![系組備取進度查詢步驟示意圖](https://imgur.com/4eUCASr.jpg "系組備取進度查詢步驟示意圖")
+![系組備取進度查詢步驟示意圖](https://imgur.com/cvx2uk0.jpg "系組備取進度查詢步驟示意圖")
 
 
 #### 個人備取進度查詢  
@@ -23,7 +23,7 @@ https://reserve-process-checker.vercel.app/
 4. 輸入考生編號/准考證號碼
 5. 按下【查詢個人備取進度】
 6. 完成!顯示個人目前的備取進度於紅線處
-![個人備取進度查詢步驟示意圖](https://imgur.com/fgywJu9.jpg "個人備取進度查詢步驟示意圖")
+![個人備取進度查詢步驟示意圖](https://imgur.com/5MZHTXB.jpg "個人備取進度查詢步驟示意圖")
 
 ### 多系組查詢
 #### 建立查詢碼
@@ -37,11 +37,11 @@ https://reserve-process-checker.vercel.app/
 7. 新增一項查詢
 (接下來可不斷選擇學校/考試類別/系組以新增查詢)
 8. 完成建立所有要查詢的項目後，按下【建立/更新查詢碼】
-9. 顯示建立之查詢碼
-10. 可按下【複製查詢碼】以複製剛剛建立的查詢碼       
-**建立好的查詢碼可以重複使用，不必每次查詢都重建**
-![建立查詢1示意圖](https://imgur.com/HgVD2mw.jpg "建立查詢1示意圖")
-![建立查詢2示意圖](https://imgur.com/ZAXn1RD.jpg "建立查詢2示意圖")
+9. 顯示建立之查詢碼   
+10. 可按下【複製查詢碼】以複製剛剛建立的查詢碼        
+**建立好的查詢碼可以重複使用，不必每次查詢都重建**  
+![建立查詢1示意圖](https://imgur.com/K4RKGdW.jpg "建立查詢1示意圖")   
+![建立查詢2示意圖](https://imgur.com/sMwosV0.jpg "建立查詢2示意圖")  
 
 - 進行系組查詢       
 **建立過的查詢碼可以不斷貼上使用**
@@ -49,4 +49,4 @@ https://reserve-process-checker.vercel.app/
 2. 貼上查詢碼
 3. 按下【開始查詢】
 4. 完成!顯示系組/個人備取進度
-![進行系組查詢示意圖](https://imgur.com/qDw4wBO.jpg "進行系組查詢示意圖")
+![進行系組查詢示意圖](https://imgur.com/oG1AUFr.jpg "進行系組查詢示意圖")
