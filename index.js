@@ -107,7 +107,7 @@ app.get("/getStatus", async(req, res) => {
 
 app.get("/getUpdateTime", async(req, res) => {
     try {
-        return res.status(200).json(await updateTimeTable.findOne({ school: req.query.school }));
+        return res.status(200).json(await updateTimeTable.findOne({ school: req.query.school, examNo: req.query.examNo }));
     } catch (error) {
         return res.status(500).json({
             result: null

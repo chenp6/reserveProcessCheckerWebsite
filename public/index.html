@@ -205,7 +205,7 @@
                 result.innerText = `名次:${userRank.rank} , 報到狀況:${userRank.status}`;
             }
 
-            const updateTimeUrl = urlHeader + `/getUpdateTime?school=${selectedSchool}`;
+            const updateTimeUrl = urlHeader + `/getUpdateTime?school=${selectedSchool}&examNo=${selectedExam}`;
             const updateTimeRes = await fetch(updateTimeUrl, {
                 method: 'GET',
             })
@@ -229,7 +229,7 @@
             const groupInput = document.getElementById("groupInput");
             result.innerText = groupInfo.get(selectedGroup);
 
-            const updateTimeUrl = urlHeader + `/getUpdateTime?school=${selectedSchool}`;
+            const updateTimeUrl = urlHeader + `/getUpdateTime?school=${selectedSchool}&examNo=${selectedExam}`;
             const updateTimeRes = await fetch(updateTimeUrl, {
                 method: 'GET',
             })
