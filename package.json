@@ -32,7 +32,7 @@
     "author": "chenp6",
     "license": "MIT",
     "type": "module",
-    "description": "各校備取進度查詢 (目前有支援交大、成大、中正、中央)\r # Demo\r https://reserve-process-checker.vercel.app/",
+    "description": "各校備取進度查詢 (目前有支援臺大、陽明交大、成大、中正、中央、政大、高科)\r # Demo\r https://reserve-process-checker.vercel.app/",
     "main": "index.js",
     "repository": {
         "type": "git",
