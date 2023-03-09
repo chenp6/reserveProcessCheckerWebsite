@@ -10,9 +10,9 @@
     <title>各校備取進度查詢</title>
     <link rel="stylesheet" href="./css/loadingHamster.css" type="text/css"> </head>
 
-<body style="font-family: 'Source Code Pro', monospace;">
+<body style="font-family: 'Source Code Pro', monospace; ">
     <!-- Copy by https://uiverse.io/Nawsome/wet-mayfly-23 -->
-    <div id="loadingPage" style="height:100vh; display: flex; gap:2vw; justify-content: center; align-items: center; flex-direction: column; ">
+    <div id="loadingPage" style="height:100vh; width: 100vw ;  position: absolute; z-index:999;  display: flex; gap:2vw; justify-content: center; align-items: center; flex-direction: column; ">
         <div aria-label="Orange and tan hamster running in a metal wheel" role="img" class="wheel-and-hamster">
             <div class="wheel"></div>
             <div class="hamster">
@@ -33,7 +33,7 @@
         </div>
         <div style="text-align:center">Please wait while the data is loading<br>Thanks for your patient!ヾ(•ω•`)o</div>
     </div>
-    <div id="loadedPage" style="display: none;">
+    <div id="loadedPage" style="z-index: 1; position: absolute; opacity: 30%;">
         <nav>
             <a href="./">快速查詢</a> |
             <a href="./group.html">多系組查詢</a>
@@ -87,33 +87,11 @@
     <script>
         let groupInfo = new Map();
         const urlHeader = "http://127.0.0.1:3000"
-
-        checkDatabaseConnection(() => {
-            console.log("data loaded!")
-        });
+        window.onload = () => {
+            onStopLoading();
+        }
         reset();
 
-        function checkDatabaseConnection(onConnected = null) {
-            document.getElementById('loadedPage').style.display = "none";
-            document.getElementById('loadingPage').style.display = "flex";
-            let preStatus = "closed";
-            const statusGetter = setInterval(async() => {
-                const url = urlHeader + '/getStatus'
-                const res = await fetch(url, {
-                    method: 'GET'
-                })
-                const status = (await res.json()).status;
-                if (preStatus != status && status == "ok") { //status:ok
-                    clearInterval(statusGetter)
-                    preStatus = status;
-                    document.getElementById('loadingPage').style.display = "none";
-                    document.getElementById('loadedPage').style.display = "block";
-                    if (onConnected != null) {
-                        onConnected();
-                    }
-                }
-            }, 1000)
-        }
 
         function reset() {
             document.getElementById("schoolSelect").selectedIndex = 0;
@@ -122,23 +100,31 @@
             document.getElementById("userIdInput").value = "";
         }
 
+        function onLoading() {
+            document.getElementById('loadedPage').style.opacity = "30%";
+            document.getElementById('loadingPage').style.display = "flex";
+        }
+
+        function onStopLoading() {
+            document.getElementById('loadingPage').style.display = "none";
+            document.getElementById('loadedPage').style.opacity = "100%";
+        }
+
+
         document.getElementById("schoolSelect").onchange = async function selectSchool() {
             const selectedSchool = document.getElementById("schoolSelect").value;
             if (selectedSchool == "") {
                 return;
             }
             const url = urlHeader + `/getExamSelect?school=${selectedSchool}`;
+            onLoading();
             const res = await fetch(url, {
                 method: 'GET',
             })
-            if (res.status == 500) {
-                const connectAndReselect = checkDatabaseConnection(() => {
-                    selectSchool();
-                });
-            }
             const examList = await res.json()
-            let html = " <option value = '' > 請選擇考試類別 </option>"
+            onStopLoading();
 
+            let html = " <option value = '' > 請選擇考試類別 </option>"
             for (const exam of examList) {
                 html += `<option value = ${exam.examNo} >  ${exam.name}</option>`
             }
@@ -158,18 +144,15 @@
                 return;
             }
 
+            onLoading();
             const url = urlHeader + `/getGroupSelect?school=${selectedSchool}&examNo=${selectedExam}`;
             const res = await fetch(url, {
                 method: 'GET',
             })
-            if (res.status == 500) {
-                const connectAndReselect = checkDatabaseConnection(() => {
-                    selectExam();
-                });
-            }
-            const groupList = await res.json()
-            let html = " <option value = '' > 請選擇系組 </option>"
+            const groupList = await res.json();
+            onStopLoading();
 
+            let html = " <option value = '' > 請選擇系組 </option>"
             for (const group of groupList) {
                 html += `<option value = ${group.groupNo} >  ${group.name}</option>`
                 groupInfo.set(group.groupNo, `已報到人數/正取招收人數:${group.registered}/${group.want}=>備取進度:${group.currentReserve}`);
@@ -192,18 +175,14 @@
             const groupId = selectedSchool + "_" + selectedExam + "_" + selectedGroup;
 
             const url = urlHeader + `/getUserRank?groupId=${groupId}&userId=${userId}`;
+            onLoading();
             const res = await fetch(url, {
                 method: 'GET',
             })
-            if (res.status == 500) {
-                checkDatabaseConnection(() => {
-                    getUserRank();
-                });
-                return;
-            }
-
             const result = document.getElementById("result");
             const userRank = await res.json();
+            onStopLoading();
+
             if (userRank == null)
                 result.innerText = `查無此考生`;
             else {
