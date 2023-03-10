@@ -122,7 +122,7 @@ app.get("/getUserRank", async(req, res) => {
 
 app.get("/getUpdateTime", async(req, res) => {
     try {
-        const updateTimeTable = await connectTable("updateTime", { tls: true });
+        const updateTimeTable = await connectTable("update time", { tls: true });
         return res.status(200).json(await updateTimeTable.findOne({ school: req.query.school, examNo: req.query.examNo }));
     } catch (error) {
         return res.status(500).json({
