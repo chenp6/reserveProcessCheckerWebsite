@@ -7,6 +7,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>各校備取進度查詢(多系組查詢)</title>
     <link rel="stylesheet" href="./css/loadingHamster.css" type="text/css">
+    <!-- Copyright (C) 2022 Nawsome
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+    
+    The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+    
+    
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.  -->
     <style>
         table,
         th,
@@ -89,9 +97,9 @@
                     <option value="NYCU">
                         國立陽明交通大學
                     </option>
-                    <option value="NKUST">
+                    <!-- <option value="NKUST">
                         國立高雄科技大學
-                    </option>
+                    </option> -->
                     <option value="NCCU">
                         國立政治大學
                     </option>
@@ -151,7 +159,6 @@
                 <label for="queryCodeInput">查詢碼:</label>
                 <input type="text" id="queryCodeInput" value="" name="queryCodeInput">
                 <button onclick="getGroupQuery()" style="width: 10vw;">開始查詢</button>
-                <br>
                 <div>[註]備取進度:目前最後一位報到者的位置 (若尚未有遞補名額，則顯示"目前尚未有遞補名額")</div>
                 <table id="resultListTable">
                     <thead>
@@ -167,11 +174,10 @@
                     <tbody id="resultListTableBody">
                     </tbody>
                 </table>
+                <div id="updateTime"></div>
             </div>
         </div>
-        <div id="updateTime"></div>
         <p>感謝大家使用此網站! 如果方便的話，請幫我填寫一下<a href="https://forms.gle/sHJdbu3zWAKMz4g6A" target="_blank">滿意度調查問卷</a>以改善使用者體驗。謝謝您!</p>
-
     </div>
 
     <script>
@@ -180,7 +186,7 @@
         }
 
         reset();
-        const urlHeader = "http://127.0.0.1:3000"
+        const urlHeader = "."
 
 
         function reset() {
@@ -226,7 +232,7 @@
             let html = " <option value = '' > 請選擇考試類別 </option>"
 
             for (const exam of examList) {
-                html += `<option  value = "${exam.year}_${exam.examNo}" >  ${exam.name}</option>`
+                html += `<option value = ${exam.examNo} >  ${exam.name}</option>`
             }
             document.getElementById("examSelect").innerHTML = html;
             document.getElementById("groupSelect").innerHTML = "";
@@ -242,15 +248,12 @@
 
         async function selectExam() {
             const selectedSchool = document.getElementById("schoolSelect").value;
-            const selectedExam = document.getElementById("examSelect").value.split("_");
+            const selectedExam = document.getElementById("examSelect").value;
             if (selectedSchool == "" || selectedExam == "") {
                 return;
             }
 
-            const examYear = selectedExam[0];
-            const examNo = selectedExam[1];
-
-            const url = urlHeader + `/getGroupSelect?school=${selectedSchool}&examNo=${examNo}&year=${examYear}}`;
+            const url = urlHeader + `/getGroupSelect?school=${selectedSchool}&examNo=${selectedExam}`;
 
             onLoading();
             const res = await fetch(url, {
@@ -330,11 +333,6 @@
         function createQueryCode() {
             const queryListTable = document.getElementById('queryListTableBody');
             const queryList = [];
-
-            const selectedExam = row.cells[1].value.split("_");
-            const examYear = selectedExam[0];
-            const examNo = selectedExam[1];
-
             for (let row of queryListTable.rows) {
                 queryList.push({
                     school: {
@@ -343,14 +341,13 @@
                     },
                     examNo: {
                         name: row.cells[1].innerText,
-                        value: examNo
+                        value: row.cells[1].value
                     },
                     groupNo: {
                         name: row.cells[2].innerText,
                         value: row.cells[2].value,
                     },
-                    userId: row.cells[3].value,
-                    year: examYear
+                    userId: row.cells[3].value
                 })
             }
 
@@ -387,14 +384,14 @@
                 schoolCell.innerHTML = query.school.name;
                 examCell.innerHTML = query.examNo.name;
                 groupCell.innerHTML = query.groupNo.name;
-                groupResultCell.innerHTML = await getReserveProcess(query.school.value, query.examNo.value, query.groupNo.value, query.year);
+                groupResultCell.innerHTML = await getReserveProcess(query.school.value, query.examNo.value, query.groupNo.value);
 
                 if (query.userId != "") {
                     const userIdCell = row.insertCell(4);
                     const userResultCell = row.insertCell(5);
 
                     userIdCell.innerHTML = query.userId;
-                    userResultCell.innerHTML = await getUserRank(query.school.value, query.examNo.value, query.groupNo.value, query.userId, query.year);
+                    userResultCell.innerHTML = await getUserRank(query.school.value, query.examNo.value, query.groupNo.value, query.userId);
                 }
             }
         }
@@ -402,8 +399,8 @@
 
 
 
-        async function getUserRank(queriedSchool, queriedExam, queriedGroup, queriedUserId, queriedYear) {
-            if (queriedSchool == "" || queriedExam == "" || queriedGroup == "" || queriedUserId == "" || queriedYear == "") {
+        async function getUserRank(queriedSchool, queriedExam, queriedGroup, queriedUserId) {
+            if (queriedSchool == "" || queriedExam == "" || queriedGroup == "" || queriedUserId == "") {
                 return;
             }
 
@@ -411,7 +408,7 @@
             const groupId = queriedSchool + "_" + queriedExam + "_" + queriedGroup;
 
             onLoading();
-            const url = urlHeader + `/getUserRank?groupId=${groupId}&userId=${queriedUserId}&year=${queriedYear}`;
+            const url = urlHeader + `/getUserRank?groupId=${groupId}&userId=${queriedUserId}`;
             const res = await fetch(url, {
                 method: 'GET',
             })
@@ -426,11 +423,11 @@
         }
 
 
-        async function getReserveProcess(queriedSchool, queriedExam, queriedGroup, queriedYear) {
-            if (queriedSchool == "" || queriedExam == "" || queriedGroup == "" || queriedYear == "") {
+        async function getReserveProcess(queriedSchool, queriedExam, queriedGroup) {
+            if (queriedSchool == "" || queriedExam == "" || queriedGroup == "") {
                 return;
             }
-            const url = urlHeader + `/getReserveProcess?school=${queriedSchool}&examNo=${queriedExam}&groupNo=${queriedGroup}&year=${queriedYear}`;
+            const url = urlHeader + `/getReserveProcess?school=${queriedSchool}&examNo=${queriedExam}&groupNo=${queriedGroup}`;
             onLoading();
             const res = await fetch(url, {
                 method: 'GET',
