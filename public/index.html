@@ -1,243 +1,113 @@
-<!DOCTYPE html>
-<html lang="en">
+<!-- Copyright - 2023 jeremyssocial (jeremys.social) 
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>各校備取進度查詢</title>
-    <link rel="stylesheet" href="./css/loadingHamster.css" type="text/css"> </head>
-<!-- Copyright (C) 2022 Nawsome
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
-    Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-    
-    The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-    
-    
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.  -->
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-<body style="font-family: 'Source Code Pro', monospace;">
-    <!-- Copy by https://uiverse.io/Nawsome/wet-mayfly-23 -->
-    <div id="loadingPage" style="height:100vh; width: 100vw ;  position: absolute; z-index:999;  display: flex; gap:2vw; justify-content: center; align-items: center; flex-direction: column; ">
-        <div aria-label="Orange and tan hamster running in a metal wheel" role="img" class="wheel-and-hamster">
-            <div class="wheel"></div>
-            <div class="hamster">
-                <div class="hamster__body">
-                    <div class="hamster__head">
-                        <div class="hamster__ear"></div>
-                        <div class="hamster__eye"></div>
-                        <div class="hamster__nose"></div>
-                    </div>
-                    <div class="hamster__limb hamster__limb--fr"></div>
-                    <div class="hamster__limb hamster__limb--fl"></div>
-                    <div class="hamster__limb hamster__limb--br"></div>
-                    <div class="hamster__limb hamster__limb--bl"></div>
-                    <div class="hamster__tail"></div>
-                </div>
-            </div>
-            <div class="spoke"></div>
+THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. -->
+
+<div class="terminal-loader">
+    <div class="terminal-header">
+        <div class="terminal-title">Status</div>
+        <div class="terminal-controls">
+            <div class="control close"></div>
+            <div class="control minimize"></div>
+            <div class="control maximize"></div>
         </div>
-        <div style="text-align:center">Please wait while the data is loading<br>Thanks for your patient!ヾ(•ω•`)o</div>
     </div>
-    <div id="loadedPage" style="z-index: 1; position: absolute; opacity: 30%;">
-        <nav>
-            <a href="./">快速查詢</a> |
-            <a href="./group.html">多系組查詢</a>
-        </nav>
-        <br>
-        <div style="border: 0.2rem solid;padding: 2vw;">
-            (1)查詢系組備取進度:選擇學校>>選擇考試類別>>選擇系組>>按下【查詢系組備取進度】
-            <br> (2)查詢個人備取進度:選擇學校>>選擇考試類別>>選擇系組>>填入考生編號/准考證號碼>>按下【查詢個人備取進度】
-        </div>
-        <br>
-        <select id="schoolSelect">
-        <option value="">
-            請選擇學校
-        </option>
-        <option value="NTU">
-            國立臺灣大學
-        </option>
-        <option value="NYCU">
-            國立陽明交通大學
-        </option>
-        <!-- <option value="NKUST">
-            國立高雄科技大學
-        </option> -->
-        <option value="NCCU">
-            國立政治大學
-        </option>
-        <option value="NCKU">
-            國立成功大學
-        </option>
-        <option value="CCU">
-            國立中正大學
-        </option>
-        <option value="NCU">
-            國立中央大學
-        </option>
-        <option value="NSYSU">
-            國立中山大學
-        </option>
-    </select>
-        <select id="examSelect">
-    </select>
-        <select id="groupSelect">
-    </select>
-        <br>
-        <label for="userIdInput">考生編號/准考證號碼:</label>
-        <input type="text" id="userIdInput" value="" name="userId">
-        <br>
-        <button onclick="getUserRank()">查詢個人備取進度</button>
-        <button onclick="getReserveProcess()">查詢系組備取進度</button>
-        <div id="result"></div>
-        <br>
-        <div>[註]備取進度:目前最後一位報到者的位置 (若尚未有遞補名額，則顯示"目前尚未有遞補名額")</div>
-        <p>感謝大家使用此網站! 如果方便的話，請幫我填寫一下<a href="https://forms.gle/sHJdbu3zWAKMz4g6A" target="_blank">滿意度調查問卷</a>以改善使用者體驗。謝謝您!</p>
-    </div>
-    <script>
-        let groupInfo = new Map();
-        const urlHeader = "."
-        window.onload = () => {
-            onStopLoading();
-        }
-        reset();
-
-
-        function reset() {
-            document.getElementById("schoolSelect").selectedIndex = 0;
-            document.getElementById("examSelect").selectedIndex = 0;
-            document.getElementById("groupSelect").selectedIndex = 0;
-            document.getElementById("userIdInput").value = "";
-        }
-
-        function onLoading() {
-            document.getElementById('loadedPage').style.opacity = "30%";
-            document.getElementById('loadingPage').style.display = "flex";
-        }
-
-        function onStopLoading() {
-            document.getElementById('loadingPage').style.display = "none";
-            document.getElementById('loadedPage').style.opacity = "100%";
-        }
-
-
-        document.getElementById("schoolSelect").onchange = async function selectSchool() {
-            const selectedSchool = document.getElementById("schoolSelect").value;
-            if (selectedSchool == "") {
-                return;
-            }
-            const url = urlHeader + `/getExamSelect?school=${selectedSchool}`;
-            onLoading();
-            const res = await fetch(url, {
-                method: 'GET',
-            })
-            const examList = await res.json()
-            onStopLoading();
-
-            let html = " <option value = '' > 請選擇考試類別 </option>"
-            for (const exam of examList) {
-                html += `<option value = ${exam.examNo} >  ${exam.name}</option>`
-            }
-            document.getElementById("examSelect").innerHTML = html;
-            document.getElementById("groupSelect").innerHTML = "";
-            document.getElementById("userIdInput").value = "";
-        }
-
-
-
-
-        document.getElementById("examSelect").onchange = async function selectExam() {
-            groupInfo = new Map();
-            const selectedSchool = document.getElementById("schoolSelect").value;
-            const selectedExam = document.getElementById("examSelect").value;
-            if (selectedSchool == "" || selectedExam == "") {
-                return;
-            }
-
-            onLoading();
-            const url = urlHeader + `/getGroupSelect?school=${selectedSchool}&examNo=${selectedExam}`;
-            const res = await fetch(url, {
-                method: 'GET',
-            })
-            const groupList = await res.json();
-            onStopLoading();
-
-            let html = " <option value = '' > 請選擇系組 </option>"
-            for (const group of groupList) {
-                html += `<option value = ${group.groupNo} >  ${group.name}</option>`
-                groupInfo.set(group.groupNo, `已報到人數/正取招收人數:${group.registered}/${group.want}=>備取進度:${group.currentReserve}`);
-            }
-            document.getElementById("groupSelect").innerHTML = html;
-            document.getElementById("userIdInput").value = "";
-
-        }
-
-
-
-        async function getUserRank() {
-            const selectedSchool = document.getElementById("schoolSelect").value;
-            const selectedExam = document.getElementById("examSelect").value;
-            const selectedGroup = document.getElementById("groupSelect").value;
-            const userId = document.getElementById("userIdInput").value;
-            if (selectedSchool == "" || selectedExam == "" || selectedGroup == "" || userId == "") {
-                return;
-            }
-            const groupId = selectedSchool + "_" + selectedExam + "_" + selectedGroup;
-
-            const url = urlHeader + `/getUserRank?groupId=${groupId}&userId=${userId}`;
-            onLoading();
-            const res = await fetch(url, {
-                method: 'GET',
-            })
-            const result = document.getElementById("result");
-            const userRank = await res.json();
-            onStopLoading();
-
-            if (userRank == null)
-                result.innerText = `查無此考生`;
-            else {
-                result.innerText = `名次:${userRank.rank} , 報到狀況:${userRank.status}`;
-            }
-
-
-            const updateTimeUrl = urlHeader + `/getUpdateTime?school=${selectedSchool}&examNo=${selectedExam}`;
-            const updateTimeRes = await fetch(updateTimeUrl, {
-                method: 'GET',
-            })
-            if (updateTimeRes.status == 500) {
-                return;
-            }
-            const updateTime = await updateTimeRes.json();
-            if (updateTime != null) {
-                result.innerText += `\n更新時間:${updateTime.time}`;
-            }
-
-        }
-
-        async function getReserveProcess() {
-            const selectedSchool = document.getElementById("schoolSelect").value;
-            const selectedExam = document.getElementById("examSelect").value;
-            const selectedGroup = document.getElementById("groupSelect").value;
-
-            if (selectedSchool == "" || selectedExam == "" || selectedGroup == "") {
-                return;
-            }
-            const groupInput = document.getElementById("groupInput");
-            result.innerText = groupInfo.get(selectedGroup);
-
-            const updateTimeUrl = urlHeader + `/getUpdateTime?school=${selectedSchool}&examNo=${selectedExam}`;
-            const updateTimeRes = await fetch(updateTimeUrl, {
-                method: 'GET',
-            })
-            if (updateTimeRes.status == 500) {
-                return;
-            }
-            const updateTime = await updateTimeRes.json();
-            if (updateTime != null) {
-                result.innerText += `\n更新時間:${updateTime.time}`;
+    <div class="text">系統維修中。。。 預計於11/25中午12：00開放，謝謝大家 :]</div>
+    <style>
+        @keyframes blinkCursor {
+            50% {
+                border-right-color: transparent;
             }
         }
-    </script>
-</body>
-
-</html>
+        
+        @keyframes typeAndDelete {
+            0%,
+            10% {
+                width: 0;
+            }
+            45%,
+            55% {
+                width: 30em;
+            }
+            /* adjust width based on content */
+            90%,
+            100% {
+                width: 0;
+            }
+        }
+        
+        .terminal-loader {
+            border: 0.1em solid #333;
+            background-color: #1a1a1a;
+            color: #0f0;
+            font-family: "Courier New", Courier, monospace;
+            font-size: 2em;
+            padding: 1.5em 1em;
+            width: 30em;
+            height: 12em;
+            margin: 100px auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+        
+        .terminal-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1.5em;
+            background-color: #333;
+            border-top-left-radius: 4px;
+            border-top-right-radius: 4px;
+            padding: 0 0.4em;
+            box-sizing: border-box;
+        }
+        
+        .terminal-controls {
+            float: right;
+        }
+        
+        .control {
+            display: inline-block;
+            width: 0.6em;
+            height: 0.6em;
+            margin-left: 0.4em;
+            border-radius: 50%;
+            background-color: #777;
+        }
+        
+        .control.close {
+            background-color: #e33;
+        }
+        
+        .control.minimize {
+            background-color: #ee0;
+        }
+        
+        .control.maximize {
+            background-color: #0b0;
+        }
+        
+        .terminal-title {
+            float: left;
+            line-height: 1.5em;
+            color: #eee;
+        }
+        
+        .text {
+            display: inline-block;
+            white-space: nowrap;
+            overflow: hidden;
+            border-right: 0.2em solid green;
+            /* Cursor */
+            animation: typeAndDelete 4s steps(11) infinite, blinkCursor 0.5s step-end infinite alternate;
+            margin-top: 1.5em;
+        }
+    </style>
+</div>
