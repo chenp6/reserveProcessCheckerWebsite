@@ -1,8 +1,7 @@
 import express from 'express'; //載入express框架模組
 import { MongoClient } from "mongodb";
 import cors from 'cors';
-import { inject } from '@vercel/analytics';
-inject();
+
 
 import * as dotenv from 'dotenv';
 dotenv.config();
