@@ -242,7 +242,7 @@
 
         async function selectExam() {
             const selectedSchool = document.getElementById("schoolSelect").value;
-            const selectedExam = document.getElementById("examSelect").value.split("_");
+            const selectedExam = document.getElementById("examSelect").value.split(/_(.*)/);
             if (selectedSchool == "" || selectedExam == "") {
                 return;
             }
@@ -250,7 +250,7 @@
             const examYear = selectedExam[0];
             const examNo = selectedExam[1];
 
-            const url = urlHeader + `/getGroupSelect?school=${selectedSchool}&examNo=${examNo}&year=${examYear}}`;
+            const url = urlHeader + `/getGroupSelect?school=${selectedSchool}&examNo=${examNo}&year=${examYear}`;
 
             onLoading();
             const res = await fetch(url, {
@@ -331,11 +331,12 @@
             const queryListTable = document.getElementById('queryListTableBody');
             const queryList = [];
 
-            const selectedExam = row.cells[1].value.split("_");
-            const examYear = selectedExam[0];
-            const examNo = selectedExam[1];
+
 
             for (let row of queryListTable.rows) {
+                const selectedExam = row.cells[1].value.split(/_(.*)/);
+                const examYear = selectedExam[0];
+                const examNo = selectedExam[1];
                 queryList.push({
                     school: {
                         name: row.cells[0].innerText,
@@ -373,6 +374,7 @@
 
             const queryListJson = encodeBase64ToJson(document.getElementById("queryCodeInput").value);
             const queryList = queryListJson.result;
+            console.log(queryList)
 
             const resultListTableBody = document.getElementById('resultListTableBody');
             resultListTableBody.innerHTML = "";
@@ -419,7 +421,7 @@
             onStopLoading();
 
             if (userRank == null)
-                reuturn `查無此考生`;
+                return `查無此考生`;
             else {
                 return `名次:${userRank.rank}<br>報到狀況:${userRank.status}`;
             }

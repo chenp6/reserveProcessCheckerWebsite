@@ -144,7 +144,7 @@
         document.getElementById("examSelect").onchange = async function selectExam() {
             groupInfo = new Map();
             const selectedSchool = document.getElementById("schoolSelect").value;
-            const selectedExam = document.getElementById("examSelect").value.split("_");
+            const selectedExam = document.getElementById("examSelect").value.split(/_(.*)/);
             if (selectedSchool == "" || selectedExam == "") {
                 return;
             }
@@ -176,7 +176,7 @@
 
         async function getUserRank() {
             const selectedSchool = document.getElementById("schoolSelect").value;
-            const selectedExam = document.getElementById("examSelect").value.split("_");
+            const selectedExam = document.getElementById("examSelect").value.split(/_(.*)/);
             const selectedGroup = document.getElementById("groupSelect").value;
             const userId = document.getElementById("userIdInput").value;
 
@@ -224,7 +224,7 @@
 
         async function getReserveProcess() {
             const selectedSchool = document.getElementById("schoolSelect").value;
-            const selectedExam = document.getElementById("examSelect").value.split("_");
+            const selectedExam = document.getElementById("examSelect").value.split(/_(.*)/);
             const selectedGroup = document.getElementById("groupSelect").value;
 
             const examYear = selectedExam[0];
