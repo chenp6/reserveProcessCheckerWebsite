@@ -13,27 +13,7 @@ const uri = process.env.MONGODB_URL;
 
 
 
-async function run() {
-    connectStatus = "start connect";
 
-    // Connect the client to the server (optional starting in v4.7)
-    await client.connect();
-
-    connectStatus = "start Establish and verify connection";
-    // Establish and verify connection
-    const db = client.db("reserveProcess");
-    await db.command({ ping: 1 });
-
-    connectStatus = "start table collection connection";
-    // examTable = await connectTable("exam", { tls: true });
-    // groupTable = await connectTable("group", { tls: true });
-    // processTable = await connectTable("process", { tls: true });
-    // updateTimeTable = await connectTable("update time", { tls: true });
-
-    connectStatus = "ok";
-    console.log(new Date() + "資料庫資料完成連接")
-}
-run().catch(console.dir);
 
 
 async function connectTable(table) {
