@@ -7,11 +7,8 @@ inject();
 import * as dotenv from 'dotenv';
 dotenv.config();
 
-let connectStatus = "closed";
 
 const uri = process.env.MONGODB_URL;
-
-
 
 
 
@@ -27,7 +24,7 @@ async function connectTable(table) {
     // Establish and verify connection
     const db = client.db("reserveProcess");
     const collection = await db.collection(table, { tls: true });
-    return collection;
+    return [client, collection];
 }
 
 
