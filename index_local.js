@@ -46,7 +46,7 @@ async function connectTable(table) {
     // Establish and verify connection
     const db = client.db("reserveProcess");
     const collection = await db.collection(table, { tls: true });
-    return collection;
+    return [client, collection];
 }
 
 
@@ -64,9 +64,9 @@ app.listen(3000 || process.env.PORT, () => {
 
 app.get("/getExamSelect", async(req, res) => {
     try {
-        const examTable = await connectTable("exam");
+        const [client, examTable] = await connectTable("exam");
         const examList = await examTable.find({ school: req.query.school }).sort({ '_id': -1 }).toArray();
-        examTable.close();
+        await client.close();
         return res.status(200).json(examList);
     } catch (error) {
         return res.status(500).json({
@@ -79,9 +79,9 @@ app.get("/getExamSelect", async(req, res) => {
 app.get("/getGroupSelect", async(req, res) => {
     //group list
     try {
-        const groupTable = await connectTable("group", { tls: true });
+        const [client, groupTable] = await connectTable("group", { tls: true });
         const arr = await groupTable.find({ school: req.query.school, examNo: '' + req.query.examNo, year: req.query.year }).toArray();
-        groupTable.close();
+        await client.close();
         return res.status(200).json(arr);
     } catch (error) {
         return res.status(500).json({
@@ -93,9 +93,9 @@ app.get("/getGroupSelect", async(req, res) => {
 app.get("/getReserveProcess", async(req, res) => {
     //group list
     try {
-        const groupTable = await connectTable("group", { tls: true });
+        const [client, groupTable] = await connectTable("group", { tls: true });
         const result = await groupTable.findOne({ school: req.query.school, examNo: '' + req.query.examNo, groupNo: '' + req.query.groupNo, year: req.query.year });
-        groupTable.close();
+        await client.close();
         return res.status(200).json(result);
     } catch (error) {
         return res.status(500).json({
@@ -107,9 +107,9 @@ app.get("/getReserveProcess", async(req, res) => {
 app.get("/getUserRank", async(req, res) => {
     //user rank
     try {
-        const processTable = await connectTable("process", { tls: true });
+        const [client, processTable] = await connectTable("process", { tls: true });
         const result = await processTable.findOne({ groupId: req.query.groupId, userId: req.query.userId, year: req.query.year });
-        processTable.close();
+        await client.close();
         return res.status(200).json(result);
     } catch (error) {
         return res.status(500).json({
@@ -131,9 +131,9 @@ app.get("/getUserRank", async(req, res) => {
 
 app.get("/getUpdateTime", async(req, res) => {
     try {
-        const updateTimeTable = await connectTable("update time", { tls: true });
+        const [client, updateTimeTable] = await connectTable("update time", { tls: true });
         const result = await updateTimeTable.findOne({ school: req.query.school, examNo: req.query.examNo, year: req.query.year });
-        updateTimeTable.close();
+        await client.close();
         return res.status(200).json(result);
     } catch (error) {
         return res.status(500).json({
