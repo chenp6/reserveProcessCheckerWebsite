@@ -5,7 +5,6 @@ import * as dotenv from 'dotenv';
 
 dotenv.config();
 
-let connectStatus = "closed";
 
 const uri = process.env.MONGODB_URL;
 
