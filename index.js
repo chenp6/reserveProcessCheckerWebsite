@@ -43,19 +43,7 @@ app.listen(3000 || process.env.PORT, () => {
     console.log(new Date() + "開始監聽port 3000!");
 });
 
-app.get("/getExamSelect", async(req, res) => {
-    try {
-        const examTable = await connectTable("exam");
-        const examList = await examTable.find({ school: req.query.school }).sort({ '_id': -1 }).toArray();
-        examTable.close();
-        return res.status(200).json(examList);
-    } catch (error) {
-        return res.status(500).json({
-            result: null
-        })
-    }
 
-});
 app.get("/getExamSelect", async(req, res) => {
     try {
         const [client, examTable] = await connectTable("exam");
