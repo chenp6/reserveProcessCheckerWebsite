@@ -2,9 +2,9 @@ import express from 'express'; //載入express框架模組
 import { MongoClient } from "mongodb";
 import cors from 'cors';
 import * as dotenv from 'dotenv';
+
 dotenv.config();
 
-let connectStatus = "closed";
 
 const uri = process.env.MONGODB_URL;
 
@@ -33,6 +33,7 @@ const uri = process.env.MONGODB_URL;
 // run().catch(console.dir);
 
 
+
 async function connectTable(table) {
 
     // Create a new MongoClient
@@ -44,7 +45,7 @@ async function connectTable(table) {
     // Establish and verify connection
     const db = client.db("reserveProcess");
     const collection = await db.collection(table, { tls: true });
-    return collection;
+    return [client, collection];
 }
 
 
@@ -62,8 +63,9 @@ app.listen(3000 || process.env.PORT, () => {
 
 app.get("/getExamSelect", async(req, res) => {
     try {
-        const examTable = await connectTable("exam");
-        const examList = await examTable.find({ school: req.query.school }).toArray();
+        const [client, examTable] = await connectTable("exam");
+        const examList = await examTable.find({ school: req.query.school }).sort({ '_id': -1 }).toArray();
+        await client.close();
         return res.status(200).json(examList);
     } catch (error) {
         return res.status(500).json({
@@ -76,8 +78,10 @@ app.get("/getExamSelect", async(req, res) => {
 app.get("/getGroupSelect", async(req, res) => {
     //group list
     try {
-        const groupTable = await connectTable("group", { tls: true });
-        return res.status(200).json(await groupTable.find({ school: req.query.school, examNo: '' + req.query.examNo }).toArray());
+        const [client, groupTable] = await connectTable("group", { tls: true });
+        const arr = await groupTable.find({ school: req.query.school, examNo: '' + req.query.examNo, year: req.query.year }).toArray();
+        await client.close();
+        return res.status(200).json(arr);
     } catch (error) {
         return res.status(500).json({
             result: null
@@ -88,8 +92,10 @@ app.get("/getGroupSelect", async(req, res) => {
 app.get("/getReserveProcess", async(req, res) => {
     //group list
     try {
-        const groupTable = await connectTable("group", { tls: true });
-        return res.status(200).json(await groupTable.findOne({ school: req.query.school, examNo: '' + req.query.examNo, groupNo: '' + req.query.groupNo }));
+        const [client, groupTable] = await connectTable("group", { tls: true });
+        const result = await groupTable.findOne({ school: req.query.school, examNo: '' + req.query.examNo, groupNo: '' + req.query.groupNo, year: req.query.year });
+        await client.close();
+        return res.status(200).json(result);
     } catch (error) {
         return res.status(500).json({
             result: null
@@ -100,8 +106,10 @@ app.get("/getReserveProcess", async(req, res) => {
 app.get("/getUserRank", async(req, res) => {
     //user rank
     try {
-        const processTable = await connectTable("process", { tls: true });
-        return res.status(200).json(await processTable.findOne({ groupId: req.query.groupId, userId: req.query.userId }));
+        const [client, processTable] = await connectTable("process", { tls: true });
+        const result = await processTable.findOne({ groupId: req.query.groupId, userId: req.query.userId, year: req.query.year });
+        await client.close();
+        return res.status(200).json(result);
     } catch (error) {
         return res.status(500).json({
             result: null
@@ -122,8 +130,10 @@ app.get("/getUserRank", async(req, res) => {
 
 app.get("/getUpdateTime", async(req, res) => {
     try {
-        const updateTimeTable = await connectTable("update time", { tls: true });
-        return res.status(200).json(await updateTimeTable.findOne({ school: req.query.school, examNo: req.query.examNo }));
+        const [client, updateTimeTable] = await connectTable("update time", { tls: true });
+        const result = await updateTimeTable.findOne({ school: req.query.school, examNo: req.query.examNo, year: req.query.year });
+        await client.close();
+        return res.status(200).json(result);
     } catch (error) {
         return res.status(500).json({
             result: null

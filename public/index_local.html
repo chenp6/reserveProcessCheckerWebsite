@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="./css/loadingHamster.css" type="text/css"> </head>
 
 <body style="font-family: 'Source Code Pro', monospace; ">
+
     <!-- Copy by https://uiverse.io/Nawsome/wet-mayfly-23 -->
     <div id="loadingPage" style="height:100vh; width: 100vw ;  position: absolute; z-index:999;  display: flex; gap:2vw; justify-content: center; align-items: center; flex-direction: column; ">
         <div aria-label="Orange and tan hamster running in a metal wheel" role="img" class="wheel-and-hamster">
@@ -37,6 +38,7 @@
         <nav>
             <a href="./">快速查詢</a> |
             <a href="./group.html">多系組查詢</a>
+            <!-- <a href="./group.html">歷年備取查詢</a> -->
         </nav>
         <br>
         <div style="border: 0.2rem solid;padding: 2vw;">
@@ -96,7 +98,6 @@
         }
         reset();
 
-
         function reset() {
             document.getElementById("schoolSelect").selectedIndex = 0;
             document.getElementById("examSelect").selectedIndex = 0;
@@ -130,7 +131,7 @@
 
             let html = " <option value = '' > 請選擇考試類別 </option>"
             for (const exam of examList) {
-                html += `<option value = ${exam.examNo} >  ${exam.name}</option>`
+                html += `<option value = "${exam.year}_${exam.examNo}" >  ${exam.name}</option>`
             }
             document.getElementById("examSelect").innerHTML = html;
             document.getElementById("groupSelect").innerHTML = "";
@@ -143,17 +144,22 @@
         document.getElementById("examSelect").onchange = async function selectExam() {
             groupInfo = new Map();
             const selectedSchool = document.getElementById("schoolSelect").value;
-            const selectedExam = document.getElementById("examSelect").value;
+            const selectedExam = document.getElementById("examSelect").value.split(/_(.*)/);
             if (selectedSchool == "" || selectedExam == "") {
                 return;
             }
 
+
+            const examYear = selectedExam[0];
+            const examNo = selectedExam[1];
+
             onLoading();
-            const url = urlHeader + `/getGroupSelect?school=${selectedSchool}&examNo=${selectedExam}`;
+            const url = urlHeader + `/getGroupSelect?school=${selectedSchool}&examNo=${examNo}&year=${examYear}`;
             const res = await fetch(url, {
                 method: 'GET',
             })
             const groupList = await res.json();
+            console.log(groupList)
             onStopLoading();
 
             let html = " <option value = '' > 請選擇系組 </option>"
@@ -170,15 +176,23 @@
 
         async function getUserRank() {
             const selectedSchool = document.getElementById("schoolSelect").value;
-            const selectedExam = document.getElementById("examSelect").value;
+            const selectedExam = document.getElementById("examSelect").value.split(/_(.*)/);
             const selectedGroup = document.getElementById("groupSelect").value;
             const userId = document.getElementById("userIdInput").value;
+
+
+
+
             if (selectedSchool == "" || selectedExam == "" || selectedGroup == "" || userId == "") {
                 return;
             }
-            const groupId = selectedSchool + "_" + selectedExam + "_" + selectedGroup;
 
-            const url = urlHeader + `/getUserRank?groupId=${groupId}&userId=${userId}`;
+            const examYear = selectedExam[0];
+            const examNo = selectedExam[1];
+
+            const groupId = selectedSchool + "_" + examNo + "_" + selectedGroup;
+
+            const url = urlHeader + `/getUserRank?groupId=${groupId}&userId=${userId}&year=${examYear}`;
             onLoading();
             const res = await fetch(url, {
                 method: 'GET',
@@ -194,7 +208,7 @@
             }
 
 
-            const updateTimeUrl = urlHeader + `/getUpdateTime?school=${selectedSchool}&examNo=${selectedExam}`;
+            const updateTimeUrl = urlHeader + `/getUpdateTime?school=${selectedSchool}&examNo=${examNo}&year=${examYear}`;
             const updateTimeRes = await fetch(updateTimeUrl, {
                 method: 'GET',
             })
@@ -210,16 +224,20 @@
 
         async function getReserveProcess() {
             const selectedSchool = document.getElementById("schoolSelect").value;
-            const selectedExam = document.getElementById("examSelect").value;
+            const selectedExam = document.getElementById("examSelect").value.split(/_(.*)/);
             const selectedGroup = document.getElementById("groupSelect").value;
 
-            if (selectedSchool == "" || selectedExam == "" || selectedGroup == "") {
+            const examYear = selectedExam[0];
+            const examNo = selectedExam[1];
+
+
+            if (selectedSchool == "" || examNo == "" || selectedGroup == "") {
                 return;
             }
             const groupInput = document.getElementById("groupInput");
             result.innerText = groupInfo.get(selectedGroup);
 
-            const updateTimeUrl = urlHeader + `/getUpdateTime?school=${selectedSchool}&examNo=${selectedExam}`;
+            const updateTimeUrl = urlHeader + `/getUpdateTime?school=${selectedSchool}&examNo=${examNo}&year=${examYear}`;
             const updateTimeRes = await fetch(updateTimeUrl, {
                 method: 'GET',
             })

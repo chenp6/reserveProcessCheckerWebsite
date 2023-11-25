@@ -226,7 +226,7 @@
             let html = " <option value = '' > 請選擇考試類別 </option>"
 
             for (const exam of examList) {
-                html += `<option value = ${exam.examNo} >  ${exam.name}</option>`
+                html += `<option  value = "${exam.year}_${exam.examNo}" >  ${exam.name}</option>`
             }
             document.getElementById("examSelect").innerHTML = html;
             document.getElementById("groupSelect").innerHTML = "";
@@ -242,12 +242,15 @@
 
         async function selectExam() {
             const selectedSchool = document.getElementById("schoolSelect").value;
-            const selectedExam = document.getElementById("examSelect").value;
+            const selectedExam = document.getElementById("examSelect").value.split(/_(.*)/);
             if (selectedSchool == "" || selectedExam == "") {
                 return;
             }
 
-            const url = urlHeader + `/getGroupSelect?school=${selectedSchool}&examNo=${selectedExam}`;
+            const examYear = selectedExam[0];
+            const examNo = selectedExam[1];
+
+            const url = urlHeader + `/getGroupSelect?school=${selectedSchool}&examNo=${examNo}&year=${examYear}`;
 
             onLoading();
             const res = await fetch(url, {
@@ -327,7 +330,13 @@
         function createQueryCode() {
             const queryListTable = document.getElementById('queryListTableBody');
             const queryList = [];
+
+
+
             for (let row of queryListTable.rows) {
+                const selectedExam = row.cells[1].value.split(/_(.*)/);
+                const examYear = selectedExam[0];
+                const examNo = selectedExam[1];
                 queryList.push({
                     school: {
                         name: row.cells[0].innerText,
@@ -335,13 +344,14 @@
                     },
                     examNo: {
                         name: row.cells[1].innerText,
-                        value: row.cells[1].value
+                        value: examNo
                     },
                     groupNo: {
                         name: row.cells[2].innerText,
                         value: row.cells[2].value,
                     },
-                    userId: row.cells[3].value
+                    userId: row.cells[3].value,
+                    year: examYear
                 })
             }
 
@@ -364,6 +374,7 @@
 
             const queryListJson = encodeBase64ToJson(document.getElementById("queryCodeInput").value);
             const queryList = queryListJson.result;
+            console.log(queryList)
 
             const resultListTableBody = document.getElementById('resultListTableBody');
             resultListTableBody.innerHTML = "";
@@ -378,14 +389,14 @@
                 schoolCell.innerHTML = query.school.name;
                 examCell.innerHTML = query.examNo.name;
                 groupCell.innerHTML = query.groupNo.name;
-                groupResultCell.innerHTML = await getReserveProcess(query.school.value, query.examNo.value, query.groupNo.value);
+                groupResultCell.innerHTML = await getReserveProcess(query.school.value, query.examNo.value, query.groupNo.value, query.year);
 
                 if (query.userId != "") {
                     const userIdCell = row.insertCell(4);
                     const userResultCell = row.insertCell(5);
 
                     userIdCell.innerHTML = query.userId;
-                    userResultCell.innerHTML = await getUserRank(query.school.value, query.examNo.value, query.groupNo.value, query.userId);
+                    userResultCell.innerHTML = await getUserRank(query.school.value, query.examNo.value, query.groupNo.value, query.userId, query.year);
                 }
             }
         }
@@ -393,8 +404,8 @@
 
 
 
-        async function getUserRank(queriedSchool, queriedExam, queriedGroup, queriedUserId) {
-            if (queriedSchool == "" || queriedExam == "" || queriedGroup == "" || queriedUserId == "") {
+        async function getUserRank(queriedSchool, queriedExam, queriedGroup, queriedUserId, queriedYear) {
+            if (queriedSchool == "" || queriedExam == "" || queriedGroup == "" || queriedUserId == "" || queriedYear == "") {
                 return;
             }
 
@@ -402,7 +413,7 @@
             const groupId = queriedSchool + "_" + queriedExam + "_" + queriedGroup;
 
             onLoading();
-            const url = urlHeader + `/getUserRank?groupId=${groupId}&userId=${queriedUserId}`;
+            const url = urlHeader + `/getUserRank?groupId=${groupId}&userId=${queriedUserId}&year=${queriedYear}`;
             const res = await fetch(url, {
                 method: 'GET',
             })
@@ -410,18 +421,18 @@
             onStopLoading();
 
             if (userRank == null)
-                reuturn `查無此考生`;
+                return `查無此考生`;
             else {
                 return `名次:${userRank.rank}<br>報到狀況:${userRank.status}`;
             }
         }
 
 
-        async function getReserveProcess(queriedSchool, queriedExam, queriedGroup) {
-            if (queriedSchool == "" || queriedExam == "" || queriedGroup == "") {
+        async function getReserveProcess(queriedSchool, queriedExam, queriedGroup, queriedYear) {
+            if (queriedSchool == "" || queriedExam == "" || queriedGroup == "" || queriedYear == "") {
                 return;
             }
-            const url = urlHeader + `/getReserveProcess?school=${queriedSchool}&examNo=${queriedExam}&groupNo=${queriedGroup}`;
+            const url = urlHeader + `/getReserveProcess?school=${queriedSchool}&examNo=${queriedExam}&groupNo=${queriedGroup}&year=${queriedYear}`;
             onLoading();
             const res = await fetch(url, {
                 method: 'GET',
