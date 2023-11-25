@@ -66,8 +66,8 @@ app.listen(3000 || process.env.PORT, () => {
 app.get("/getExamSelect", async(req, res) => {
     try {
         const examTable = await connectTable("exam");
-        const examList = await examTable.find({ school: req.query.school }).toArray();
-        await examTable.close();
+        const examList = await examTable.find({ school: req.query.school }).sort({ '_id': -1 }).toArray();
+        examTable.close();
         return res.status(200).json(examList);
     } catch (error) {
         return res.status(500).json({
@@ -81,8 +81,9 @@ app.get("/getGroupSelect", async(req, res) => {
     //group list
     try {
         const groupTable = await connectTable("group", { tls: true });
-        await groupTable.close();
-        return res.status(200).json(await groupTable.find({ school: req.query.school, examNo: '' + req.query.examNo, year: req.query.year }).toArray());
+        const arr = await groupTable.find({ school: req.query.school, examNo: '' + req.query.examNo, year: req.query.year }).toArray();
+        groupTable.close();
+        return res.status(200).json(arr);
     } catch (error) {
         return res.status(500).json({
             result: null
@@ -94,8 +95,9 @@ app.get("/getReserveProcess", async(req, res) => {
     //group list
     try {
         const groupTable = await connectTable("group", { tls: true });
-        await groupTable.close();
-        return res.status(200).json(await groupTable.findOne({ school: req.query.school, examNo: '' + req.query.examNo, groupNo: '' + req.query.groupNo, year: req.query.year }));
+        const result = await groupTable.findOne({ school: req.query.school, examNo: '' + req.query.examNo, groupNo: '' + req.query.groupNo, year: req.query.year });
+        groupTable.close();
+        return res.status(200).json(result);
     } catch (error) {
         return res.status(500).json({
             result: null
@@ -107,9 +109,9 @@ app.get("/getUserRank", async(req, res) => {
     //user rank
     try {
         const processTable = await connectTable("process", { tls: true });
-        await processTable.close();
-
-        return res.status(200).json(await processTable.findOne({ groupId: req.query.groupId, userId: req.query.userId, year: req.query.year }));
+        const result = await processTable.findOne({ groupId: req.query.groupId, userId: req.query.userId, year: req.query.year });
+        processTable.close();
+        return res.status(200).json(result);
     } catch (error) {
         return res.status(500).json({
             result: null
@@ -131,8 +133,9 @@ app.get("/getUserRank", async(req, res) => {
 app.get("/getUpdateTime", async(req, res) => {
     try {
         const updateTimeTable = await connectTable("update time", { tls: true });
-        await updateTimeTable.close();
-        return res.status(200).json(await updateTimeTable.findOne({ school: req.query.school, examNo: req.query.examNo, year: req.query.year }));
+        const result = await updateTimeTable.findOne({ school: req.query.school, examNo: req.query.examNo, year: req.query.year });
+        updateTimeTable.close();
+        return res.status(200).json(result);
     } catch (error) {
         return res.status(500).json({
             result: null
