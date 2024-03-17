@@ -3,7 +3,6 @@
         "node": "16.x"
     },
     "dependencies": {
-        "@vercel/analytics": "^1.1.1",
         "cheerio": "^1.0.0-rc.12",
         "chrome-aws-lambda": "^10.1.0",
         "cors": "^2.8.5",
