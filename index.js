@@ -33,10 +33,15 @@ app.use(cors({
     origin: '*',
 }));
 
-app.use(express.json());
-app.use('/', express.static('.')); //將整個server資料夾放到server上的/路徑
+import path from 'path';
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
+const __dirname = path.dirname(__filename); // get the name of the directory
 
-//app.use('/', express.static(__dirname + '/public')); //將整個server資料夾放到server上的/路徑
+app.use(express.json());
+//app.use('/', express.static('.')); //將整個server資料夾放到server上的/路徑
+
+app.use('/', express.static(__dirname + '/public')); //將整個server資料夾放到server上的/路徑
 //app.use('/', express.static(__dirname + '/public')); //將整個server資料夾放到server上的/路徑
 //app.use('/css', express.static(__dirname + '/css')); //將整個server資料夾放到server上的/路徑
 
