@@ -34,7 +34,7 @@ app.use(cors({
 }));
 
 app.use(express.json());
-app.use('/', express.static(__dirname + '/**')); //將整個server資料夾放到server上的/路徑
+app.use('/', express.static(__dirname + '/public')); //將整個server資料夾放到server上的/路徑
 //app.use('/css', express.static(__dirname + '/css')); //將整個server資料夾放到server上的/路徑
 
 
