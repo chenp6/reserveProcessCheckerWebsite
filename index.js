@@ -11,7 +11,6 @@ const uri = process.env.MONGODB_URL;
 
 
 
-
 async function connectTable(table) {
 
     // Create a new MongoClient
@@ -33,6 +32,9 @@ let app = express();
 app.use(cors({
     origin: '*',
 }));
+
+app.use(express.json());
+app.use('/', express.static(__dirname + '/public')); //將整個server資料夾放到server上的/路徑
 
 
 app.listen(3000 || process.env.PORT, () => {
