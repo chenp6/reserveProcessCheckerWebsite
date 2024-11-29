@@ -3,3 +3,4 @@ node_modules
 preServer
 APItest.js
 Modifier.js
+.vscode
