@@ -9,26 +9,10 @@
             "use": "@vercel/static"
         }
     ],
-    "routes": [{
-            "src": "/",
-            "dest": "public/index.html"
-        },{
-            "src": "/",
-            "dest": "public/fix.html"
-        },
+    "routes": [
         {
-            "src": "/group.html",
-            "dest": "public/group.html"
-        },
-        {
-            "src": "/css/loadingHamster.css",
-            "dest": "public/css/loadingHamster.css"
-        }, {
-            "src": "/LICENSE.txt",
-            "dest": "LICENSE.txt"
-        }, {
-            "src": "/(.+)",
-            "dest": "/"
+            "src": "/(.*)",
+            "dest": "index.js"
         }
     ]
 }
