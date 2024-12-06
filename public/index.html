@@ -208,7 +208,7 @@
 
             const groupId = selectedSchool + "_" + examNo + "_" + selectedGroup;
 
-            const url = urlHeader + `/getUserRank?groupId=${groupId}&userId=${userId}&year=${examYear}`;
+            const url = urlHeader + `/getUserRank?groupId=${encodeURIComponent(groupId)}&userId=${encodeURIComponent(userId)}&year=${examYear}`;
             onLoading();
             const res = await fetch(url, {
                 method: 'GET',
