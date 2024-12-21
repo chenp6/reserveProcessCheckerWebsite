@@ -85,7 +85,13 @@
             <br> (3)進行多系組查詢:展開【進行多系組查詢】 >> 貼上查詢碼 >> 按下【開始查詢】>> 完成!
             <br> [註] 建立過的查詢碼可不斷貼上使用
         </div>
-
+        <div style="color: red; margin-bottom: 10px;">[近期錯誤!]
+            由於近期更新後，有比較嚴重的bug，如果有使用到<b>114中央推甄</b>的同學，會需要重新產生查詢碼喔!
+            謝謝! 抱歉造成困擾!                    
+            <br/>
+            [bug詳情]
+            <b>114中央推甄</b>進度爬蟲時，不小心每次爬取系組時都建立新的一筆資料，導致沒有正確更新且造成顯示多個重複系組                    
+        </div>
         <div class="togglePanel" id="createQueryPanel">
             <header class="toggleHeader">
                 <button class="toggleBtn" id="createQueryToggle" onclick="openToggle('createQuery')">▶</button>【建立查詢碼】
@@ -167,6 +173,10 @@
                 <label for="queryCodeInput">查詢碼:</label>
                 <input type="text" id="queryCodeInput" value="" name="queryCodeInput">
                 <button onclick="getGroupQuery()" style="width: 10vw;">開始查詢</button>
+
+                
+                
+                
                 <div>[註]備取進度:目前最後一位報到者的位置 (若尚未有遞補名額，則顯示"目前尚未有遞補名額")</div>
                 <br>
                 <div style="color: red; margin-bottom: 10px;">[小提醒]此網站的遞補資訊僅作參考用
