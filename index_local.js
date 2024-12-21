@@ -1,36 +1,13 @@
 import express from 'express'; //載入express框架模組
 import { MongoClient } from "mongodb";
 import cors from 'cors';
-import * as dotenv from 'dotenv';
 
+
+import * as dotenv from 'dotenv';
 dotenv.config();
 
 
 const uri = process.env.MONGODB_URL;
-
-
-
-// async function run() {
-//     connectStatus = "start connect";
-
-//     // Connect the client to the server (optional starting in v4.7)
-//     await client.connect();
-
-//     connectStatus = "start Establish and verify connection";
-//     // Establish and verify connection
-//     const db = client.db("reserveProcess");
-//     await db.command({ ping: 1 });
-
-//     connectStatus = "start table collection connection";
-//     // examTable = await connectTable("exam", { tls: true });
-//     // groupTable = await connectTable("group", { tls: true });
-//     // processTable = await connectTable("process", { tls: true });
-//     // updateTimeTable = await connectTable("update time", { tls: true });
-
-//     connectStatus = "ok";
-//     console.log(new Date() + "資料庫資料完成連接")
-// }
-// run().catch(console.dir);
 
 
 
@@ -56,10 +33,24 @@ app.use(cors({
     origin: '*',
 }));
 
+import path from 'path';
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
+const __dirname = path.dirname(__filename); // get the name of the directory
+
+app.use(express.json());
+//app.use('/', express.static('.')); //將整個server資料夾放到server上的/路徑
+
+app.use('/', express.static(__dirname + '/public')); //將整個server資料夾放到server上的/路徑
+//app.use('/', express.static(__dirname + '/public')); //將整個server資料夾放到server上的/路徑
+//app.use('/css', express.static(__dirname + '/css')); //將整個server資料夾放到server上的/路徑
+
+
 
 app.listen(3000 || process.env.PORT, () => {
     console.log(new Date() + "開始監聽port 3000!");
 });
+
 
 app.get("/getExamSelect", async(req, res) => {
     try {

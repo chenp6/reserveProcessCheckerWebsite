@@ -87,12 +87,9 @@
         </div>
         <div style="color: red; margin-bottom: 10px;">
             [近期錯誤!]
-            由於近期更新後，有比較嚴重的bug，目前正在維修中。<br/>
-            如果有使用到<b>114中央推甄</b>的同學，請於2024/12/21 16:00後重新產生查詢碼喔!
-            謝謝! 抱歉造成困擾!                    
-            <br/>
-            [bug詳情]
-            <b>114中央推甄</b>進度爬蟲時，不小心每次爬取系組時都建立新的一筆資料，導致沒有正確更新且造成顯示多個重複系組                    
+            由於近期更新後，有比較嚴重的bug，目前已維修完成!<br/>
+            如果有使用到<b>114中央推甄</b>的同學，要麻煩於2024/12/21 15:10後重新產生查詢碼喔!
+            謝謝! 抱歉造成困擾!                         
         </div>
         <div class="togglePanel" id="createQueryPanel">
             <header class="toggleHeader">
@@ -146,11 +143,7 @@
                     <input type="text" id="userIdInput" value="" name="userId" style="width: 20vw;">
                     <button onclick="addNewQuery()" style="width: 10vw;">新增查詢</button>
                 </div>
-                <div>
-                    <button onclick="createQueryCode()" style="width: 10vw;">建立/更新查詢碼</button>
-                    <button onclick="copyQueryCode()" style="width: 10vw;">複製查詢碼</button>
-                </div>
-                <input type="text" placeholder="查詢碼建立結果顯示於此" id="queryCodeOutput" readonly="readonly">
+
                 <table id="queryListTable">
                     <thead>
                         <tr>
@@ -164,6 +157,12 @@
                     <tbody id="queryListTableBody">
                     </tbody>
                 </table>
+                <div>
+                    <button onclick="createQueryCode()" style="width: 10vw;">建立/更新查詢碼</button>
+                    <button onclick="copyQueryCode()" style="width: 10vw;">複製查詢碼</button>
+                </div>
+                <input type="text" placeholder="按下建立查詢碼後，結果顯示於此" id="queryCodeOutput" readonly="readonly">
+                
             </div>
 
         </div>
@@ -176,9 +175,6 @@
                 <input type="text" id="queryCodeInput" value="" name="queryCodeInput">
                 <button onclick="getGroupQuery()" style="width: 10vw;">開始查詢</button>
 
-                
-                
-                
                 <div>[註]備取進度:目前最後一位報到者的位置 (若尚未有遞補名額，則顯示"目前尚未有遞補名額")</div>
                 <br>
                 <div style="color: red; margin-bottom: 10px;">[小提醒]此網站的遞補資訊僅作參考用
