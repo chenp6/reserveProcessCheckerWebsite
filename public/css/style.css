@@ -279,3 +279,92 @@ button:focus-visible {
 .links a:focus-visible {
   text-decoration: underline;
 }
+
+.panel {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.02);
+  overflow: hidden;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border-bottom: 1px solid var(--border);
+}
+
+.panel-title {
+  margin: 0;
+  font-weight: 600;
+}
+
+.panel-subtitle {
+  margin: 2px 0 0 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.panel-body {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.toggleContent {
+  display: none;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.toggleBtn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border);
+  color: var(--text);
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  box-shadow: none;
+}
+
+.toggleBtn:hover,
+.toggleBtn:focus-visible {
+  transform: none;
+  box-shadow: none;
+  border-color: rgba(79, 184, 255, 0.5);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.table th,
+.table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+}
+
+.table th {
+  background: rgba(255, 255, 255, 0.05);
+  font-weight: 700;
+}
+
+.table tbody tr:nth-child(2n) {
+  background: rgba(255, 255, 255, 0.01);
+}
+
+.table tbody tr:last-child th,
+.table tbody tr:last-child td {
+  border-bottom: none;
+}

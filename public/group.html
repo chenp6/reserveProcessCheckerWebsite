@@ -1,62 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hant">
 
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>各校備取進度查詢(多系組查詢)</title>
+    <title>各校備取進度查詢（多系組）</title>
     <link rel="stylesheet" href="./css/loadingHamster.css" type="text/css">
-    <!-- Copyright (C) 2022 Nawsome
-
-    Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-    
-    The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-    
-    
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.  -->
-    <style>
-        table,
-        th,
-        td {
-            border: 1px solid;
-            text-align: center;
-        }
-        
-        button {
-            cursor: pointer;
-        }
-        
-        .toggleBtn {
-            background-color: transparent;
-            border: 0;
-        }
-        
-        .togglePanel {
-            border: 0.2rem solid;
-            padding: 0.5vw 1vw;
-        }
-        
-        .toggleHeader {
-            margin: 1vw;
-        }
-        
-        .toggleContent {
-            display: none;
-            flex-direction: column;
-            gap: 1vw
-        }
-    </style>
+    <link rel="stylesheet" href="./css/style.css" type="text/css">
 </head>
 
-<body style="font-family: 'Source Code Pro', monospace;">
-    <nav>
-        <a href="./">快速查詢</a> |
-        <a href="./group.html">多系組查詢</a>
-    </nav>
-    <br>
-    <!-- Copy by https://uiverse.io/Nawsome/wet-mayfly-23 -->
-    <div id="loadingPage" style="height:100vh; width: 100vw ;  position: absolute; z-index:999;  display: flex; gap:2vw; justify-content: center; align-items: center; flex-direction: column; ">
+<body>
+    <div id="loadingPage" class="loading-overlay">
         <div aria-label="Orange and tan hamster running in a metal wheel" role="img" class="wheel-and-hamster">
             <div class="wheel"></div>
             <div class="hamster">
@@ -75,131 +30,156 @@
             </div>
             <div class="spoke"></div>
         </div>
-        <div style="text-align:center">Please wait while the data is loading<br>Thanks for your patient!ヾ(•ω•`)o</div>
+        <div class="loading-text">資料載入中，請稍候<br>Thanks for your patience!ヾ(•ω•`)o</div>
     </div>
 
-    <div id="loadedPage" style="z-index: 1; position: absolute; opacity: 30%; width:90vw; display: flex; flex-direction: column; gap: 1vh;">
-        <div style="border: 0.2rem solid;padding: 1vw;line-height: 2vw;">
-            (1)新增查詢系組:展開【建立查詢碼】 >> 選擇學校/考試類別/系組 >> 輸入考生編號/准考證號碼 >> 按下【新增查詢】
-            <br> (2)建立查詢碼: 按下【建立/更新查詢碼】>> 查詢碼顯示 >> 按下【複製查詢碼】以複製剛剛建立的查詢碼
-            <br> (3)進行多系組查詢:展開【進行多系組查詢】 >> 貼上查詢碼 >> 按下【開始查詢】>> 完成!
-            <br> [註] 建立過的查詢碼可不斷貼上使用
-        </div>
-        <div style="color: red; margin-bottom: 10px;">
-            [近期錯誤!]
-            由於近期更新後，有比較嚴重的bug，目前已維修完成!<br/>
-            如果有使用到<b>114中央推甄</b>的同學，要麻煩於2024/12/21 15:10後重新產生查詢碼喔!
-            謝謝! 抱歉造成困擾!                         
-        </div>
-        <div class="togglePanel" id="createQueryPanel">
-            <header class="toggleHeader">
-                <button class="toggleBtn" id="createQueryToggle" onclick="openToggle('createQuery')">▶</button>【建立查詢碼】
+    <div id="loadedPage">
+        <div class="wrapper">
+            <header class="header">
+                <div class="brand">
+                    <div class="brand-logo">RP</div>
+                    <div>
+                        <p class="brand-title">各校備取進度查詢（多系組）</p>
+                        <div class="tag" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 2L19 21L12 17L5 21L12 2Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                            一次輸入，多組備取同步查詢
+                        </div>
+                    </div>
+                </div>
+                <nav class="nav" aria-label="主導覽">
+                    <a href="./">快速查詢</a>
+                    <a href="./group.html">多系組查詢</a>
+                    <a href="./notice.html">最新公告</a>
+                </nav>
             </header>
-            <div class="toggleContent" id="createQueryContent">
-                <div>
-                    <select id="schoolSelect">
-                    <option value="">
-                        請選擇學校
-                    </option>
-                    <option value="NTU">
-                        國立臺灣大學
-                    </option>
-                    <option value="NYCU">
-                        國立陽明交通大學
-                    </option>
-                    <!-- <option value="NKUST">
-                        國立高雄科技大學
-                    </option> -->
-                    <option value="NCCU">
-                        國立政治大學
-                    </option>
-                    <option value="NCKU">
-                        國立成功大學
-                    </option>
-                    <option value="CCU">
-                        國立中正大學
-                    </option>
-                    <option value="NCU">
-                        國立中央大學
-                    </option>
-                    <option value="NSYSU">
-                        國立中山大學
-                    </option>
-                    <option value="UST">
-                        台灣聯合大學系統
-                    </option>
-                </select>
-                    <select id="examSelect">
-                    <option value="NCU">
-                    </option>
-                </select>
-                    <select id="groupSelect">
-                    <option value="NCU">
-                    </option>
-                </select>
-                </div>
-                <div>
-                    <label for="userIdInput">考生編號/准考證號碼(非必填):</label>
-                    <input type="text" id="userIdInput" value="" name="userId" style="width: 20vw;">
-                    <button onclick="addNewQuery()" style="width: 10vw;">新增查詢</button>
-                </div>
 
-                <table id="queryListTable">
-                    <thead>
-                        <tr>
-                            <th>學校</th>
-                            <th>考試類別</th>
-                            <th>系組</th>
-                            <th>考生編號/准考證號碼</th>
-                            <th>刪除?</th>
-                        </tr>
-                    </thead>
-                    <tbody id="queryListTableBody">
-                    </tbody>
-                </table>
-                <button onclick="createQueryCode()" style="width: 10vw;">建立/更新查詢碼</button>
-                <input type="text" placeholder="按下建立查詢碼後，結果顯示於此" id="queryCodeOutput" readonly="readonly">
-                <button onclick="copyQueryCode()" style="width: 10vw;">複製查詢碼</button>
+            <div class="grid">
+                <main class="card">
+                    <h2>查詢流程</h2>
+                    <div class="notice">
+                        <strong>操作步驟：</strong><br>
+                        1. 於「建立查詢碼」中新增想查詢的學校/考試/系組，可選填考生編號或准考證號。<br>
+                        2. 按下「建立/更新查詢碼」並複製查詢碼。<br>
+                        3. 於「進行多系組查詢」貼上查詢碼後送出，即可一次取得所有結果。
+                    </div>
 
+                    <div class="panel" id="createQueryPanel">
+                        <header class="panel-header">
+                            <button class="toggleBtn" id="createQueryToggle" onclick="openToggle('createQuery')">▶</button>
+                            <div>
+                                <p class="panel-title">建立查詢碼</p>
+                                <p class="panel-subtitle">挑選學校、考試類別與系組，整合為一組查詢碼。</p>
+                            </div>
+                        </header>
+                        <div class="panel-body toggleContent" id="createQueryContent">
+                            <div class="actions">
+                                <div>
+                                    <div class="label">學校</div>
+                                    <select id="schoolSelect" aria-label="學校選擇">
+                                        <option value="">請選擇學校</option>
+                                        <option value="NTU">國立臺灣大學</option>
+                                        <option value="NYCU">國立陽明交通大學</option>
+                                        <option value="NCCU">國立政治大學</option>
+                                        <option value="NCKU">國立成功大學</option>
+                                        <option value="CCU">國立中正大學</option>
+                                        <option value="NCU">國立中央大學</option>
+                                        <option value="NSYSU">國立中山大學</option>
+                                        <option value="UST">台灣聯合大學系統</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <div class="label">考試類別</div>
+                                    <select id="examSelect" aria-label="考試類別選擇"></select>
+                                </div>
+                                <div>
+                                    <div class="label">系組</div>
+                                    <select id="groupSelect" aria-label="系組選擇"></select>
+                                </div>
+                                <div>
+                                    <div class="label">考生編號/准考證號碼（非必填）</div>
+                                    <input type="text" id="userIdInput" name="userId" aria-label="考生編號或准考證號碼">
+                                </div>
+                            </div>
+
+                            <div class="links">
+                                <button onclick="addNewQuery()">新增查詢</button>
+                                <button class="secondary" onclick="reset()">清除表單</button>
+                            </div>
+
+                            <table id="queryListTable" class="table">
+                                <thead>
+                                    <tr>
+                                        <th>學校</th>
+                                        <th>考試類別</th>
+                                        <th>系組</th>
+                                        <th>考生編號/准考證號碼</th>
+                                        <th>刪除</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="queryListTableBody"></tbody>
+                            </table>
+
+                            <div class="links">
+                                <button onclick="createQueryCode()">建立/更新查詢碼</button>
+                                <input type="text" placeholder="按下建立查詢碼後，結果顯示於此" id="queryCodeOutput" readonly>
+                                <button class="secondary" onclick="copyQueryCode()">複製查詢碼</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel" id="groupQueryPanel" style="margin-top: 12px;">
+                        <header class="panel-header">
+                            <button class="toggleBtn" id="groupQueryToggle" onclick="openToggle('groupQuery')">▶</button>
+                            <div>
+                                <p class="panel-title">進行多系組查詢</p>
+                                <p class="panel-subtitle">貼上查詢碼，一鍵取得所有系組與個人備取資訊。</p>
+                            </div>
+                        </header>
+                        <div class="panel-body toggleContent" id="groupQueryContent">
+                            <div class="actions">
+                                <div>
+                                    <div class="label">查詢碼</div>
+                                    <input type="text" id="queryCodeInput" name="queryCodeInput" aria-label="查詢碼輸入">
+                                </div>
+                            </div>
+                            <div class="links">
+                                <button onclick="getGroupQuery()">開始查詢</button>
+                            </div>
+                            <div class="alert warn">備取進度為爬蟲資料，若學校未更新官方網站，資訊可能有落差。</div>
+                            <div class="alert">備註：備取進度表示目前最後一位報到者的位置，尚未有遞補時會顯示「目前尚未有遞補名額」。</div>
+                            <table id="resultListTable" class="table">
+                                <thead>
+                                    <tr>
+                                        <th>學校</th>
+                                        <th>考試類別</th>
+                                        <th>系組</th>
+                                        <th>系組備取狀況</th>
+                                        <th>考生編號/准考證號碼</th>
+                                        <th>考生查詢結果</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="resultListTableBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </main>
+
+                <aside class="card">
+                    <h2>公告與提醒</h2>
+                    <div class="alert warn">此網站的遞補資訊僅供參考，若學校未即時更新官方資訊，內容可能有延遲。</div>
+                    <div class="alert">為節省記憶體空間，可能會移除非當年度之個人備取進度。</div>
+                    <div class="notice">感謝大家使用此網站！若方便，歡迎填寫 <a href="https://forms.gle/sHJdbu3zWAKMz4g6A" target="_blank" rel="noopener">滿意度調查問卷</a>，或寫信至 <a href="mailto:cpr40517@gmail.com">cpr40517@gmail.com</a> 回饋建議。</div>
+                    <div class="links">
+                        <a href="./notice.html">查看完整公告</a>
+                        <a href="./">回到快速查詢</a>
+                    </div>
+                </aside>
             </div>
 
+            <div class="footer">Copyright (C) 2022 Nawsome. 本網站提供資訊僅供參考，請以各校官方公告為準。</div>
         </div>
-        <div id="groupQueryPanel" class="togglePanel">
-            <header class="toggleHeader">
-                <button class="toggleBtn" id="groupQueryToggle" onclick="openToggle('groupQuery')">▶</button>【進行多系組查詢】
-            </header>
-            <div class="toggleContent" id="groupQueryContent">
-                <label for="queryCodeInput">查詢碼:</label>
-                <input type="text" id="queryCodeInput" value="" name="queryCodeInput">
-                <button onclick="getGroupQuery()" style="width: 10vw;">開始查詢</button>
-
-                <div>[註]備取進度:目前最後一位報到者的位置 (若尚未有遞補名額，則顯示"目前尚未有遞補名額")</div>
-                <br>
-                <div style="color: red; margin-bottom: 10px;">[小提醒]此網站的遞補資訊僅作參考用
-                    <br>
-                    <div style="color: black;">由於以下備取進度皆為爬各校遞補網站獲得的，因此若該校沒有更新進度至網站上，則可能網站的資訊是過舊的。</div>
-                    所以目前已辦理報到的學生若改為放棄，則有可能依序遞補。
-                    <div style="color: black;">舉例來說:112年碩班考試台大網站資工系系統僅更新顯示到備取8，但實際上最後備取至備取57左右 </div>
-                </div>
-                <div style="color: blue;">[小提醒]為節省記憶體空間，可能會移除非當年度之個人備取進度
-                </div>
-                <table id="resultListTable">
-                    <thead>
-                        <tr>
-                            <th>學校</th>
-                            <th>考試類別</th>
-                            <th>系組</th>
-                            <th>系組備取狀況</th>
-                            <th>考生編號/准考證號碼</th>
-                            <th>考生查詢結果</th>
-                        </tr>
-                    </thead>
-                    <tbody id="resultListTableBody">
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <p>感謝大家使用此網站! 如果方便的話，請幫我填寫一下<a href="https://forms.gle/sHJdbu3zWAKMz4g6A" target="_blank">滿意度調查問卷</a>以改善使用者體驗。謝謝您!</p>
     </div>
 
     <script>
@@ -209,8 +189,7 @@
         }
 
         reset();
-        const urlHeader = "."
-
+        const urlHeader = ".";
 
         function reset() {
             document.getElementById("schoolSelect").selectedIndex = 0;
@@ -221,7 +200,6 @@
             document.getElementById("queryCodeInput").value = "";
         }
 
-
         function onLoading() {
             document.getElementById('loadedPage').style.opacity = "30%";
             document.getElementById('loadingPage').style.display = "flex";
@@ -231,8 +209,6 @@
             document.getElementById('loadingPage').style.display = "none";
             document.getElementById('loadedPage').style.opacity = "100%";
         }
-
-
 
         document.getElementById("schoolSelect").onchange = () => {
             selectSchool()
@@ -261,9 +237,6 @@
             document.getElementById("groupSelect").innerHTML = "";
             document.getElementById("userIdInput").value = "";
         }
-
-
-
 
         document.getElementById("examSelect").onchange = () => {
             selectExam();
@@ -297,10 +270,6 @@
 
         }
 
-
-
-
-
         //toggles settings
         function openToggle(prefix) {
             document.getElementById(`${prefix}Content`).style.display = "flex";
@@ -317,7 +286,6 @@
             }
             document.getElementById(`${prefix}Toggle`).innerText = "▶";
         }
-
 
         function addNewQuery() {
             const schoolSelect = document.getElementById("schoolSelect");
@@ -395,7 +363,6 @@
             text.select();
             document.execCommand("copy");
         }
-
 
 
 
