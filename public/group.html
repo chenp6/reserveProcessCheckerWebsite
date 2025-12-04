@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>各校備取進度查詢（多系組）</title>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="./css/loadingHamster.css" type="text/css">
     <link rel="stylesheet" href="./css/style.css" type="text/css">
 </head>
@@ -182,14 +183,41 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
         // location.href = "./fix.html";
         window.onload = () => {
             onStopLoading();
+            initSelect2();
         }
 
         reset();
         const urlHeader = ".";
+
+        function initSelect2() {
+            const placeholders = {
+                schoolSelect: "請選擇學校",
+                examSelect: "請選擇考試類別",
+                groupSelect: "請選擇系組"
+            };
+
+            ["#schoolSelect", "#examSelect", "#groupSelect"].forEach((selector) => {
+                const id = selector.replace("#", "");
+                const $select = $(selector);
+                if ($select.hasClass("select2-hidden-accessible")) {
+                    $select.select2("destroy");
+                }
+                $select.select2({
+                    width: "100%",
+                    placeholder: placeholders[id] || "請選擇",
+                    allowClear: true,
+                    language: {
+                        noResults: () => "沒有符合的項目"
+                    }
+                });
+            });
+        }
 
         function reset() {
             document.getElementById("schoolSelect").selectedIndex = 0;
@@ -198,6 +226,7 @@
             document.getElementById("userIdInput").value = "";
             document.getElementById("queryCodeOutput").value = "";
             document.getElementById("queryCodeInput").value = "";
+            $("#schoolSelect, #examSelect, #groupSelect").val("").trigger("change");
         }
 
         function onLoading() {
@@ -236,6 +265,7 @@
             document.getElementById("examSelect").innerHTML = html;
             document.getElementById("groupSelect").innerHTML = "";
             document.getElementById("userIdInput").value = "";
+            $("#examSelect, #groupSelect").val("").trigger("change");
         }
 
         document.getElementById("examSelect").onchange = () => {
