@@ -138,8 +138,8 @@ input[type="text"] {
   padding: 12px;
   border-radius: 12px;
   border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.04);
-  color: var(--text);
+  background: #fff;
+  color: #000;
   outline: none;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
@@ -172,8 +172,8 @@ input[type="text"]:focus {
   padding: 8px 44px 8px 12px;
   border-radius: 12px;
   border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.04);
-  color: var(--text);
+  background: #fff;
+  color: #000;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -185,7 +185,7 @@ input[type="text"]:focus {
 }
 
 .select2-container .select2-selection__rendered {
-  color: var(--text);
+  color: #000;
   line-height: 28px;
   padding-left: 0;
 }
