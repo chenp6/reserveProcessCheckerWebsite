@@ -144,6 +144,18 @@ input[type="text"] {
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
+select option {
+  background: #fff;
+  color: #000;
+}
+
+select option:checked,
+select option:focus,
+select option:hover {
+  background: #fff;
+  color: #000;
+}
+
 select:focus,
 input[type="text"]:focus {
   border-color: rgba(79, 184, 255, 0.7);
@@ -175,6 +187,17 @@ input[type="text"]:focus {
   color: var(--text);
   line-height: 28px;
   padding-left: 0;
+}
+
+.select2-results__option {
+  background: #fff;
+  color: #000;
+}
+
+.select2-results__option--highlighted[aria-selected],
+.select2-results__option[aria-selected="true"] {
+  background: #fff !important;
+  color: #000 !important;
 }
 
 .select2-container .select2-selection__arrow {
