@@ -219,6 +219,12 @@
             });
         }
 
+        function updateSelectOptions(selector, optionsHtml) {
+            const $select = $(selector);
+            $select.html(optionsHtml);
+            $select.val("").trigger("change");
+        }
+
         function reset() {
             document.getElementById("schoolSelect").selectedIndex = 0;
             document.getElementById("examSelect").selectedIndex = 0;
@@ -245,7 +251,10 @@
 
         async function selectSchool() {
             const selectedSchool = document.getElementById("schoolSelect").value;
-            if (selectedSchool == "") {
+            if (selectedSchool === "") {
+                updateSelectOptions("#examSelect", "<option value=''>請選擇考試類別</option>");
+                updateSelectOptions("#groupSelect", "<option value=''>請選擇系組</option>");
+                document.getElementById("userIdInput").value = "";
                 return;
             }
 
@@ -262,10 +271,9 @@
             for (const exam of examList) {
                 html += `<option  value = "${exam.year}_${exam.examNo}" >  ${exam.name}</option>`
             }
-            document.getElementById("examSelect").innerHTML = html;
-            document.getElementById("groupSelect").innerHTML = "";
+            updateSelectOptions("#examSelect", html);
+            updateSelectOptions("#groupSelect", "<option value=''>請選擇系組</option>");
             document.getElementById("userIdInput").value = "";
-            $("#examSelect, #groupSelect").val("").trigger("change");
         }
 
         document.getElementById("examSelect").onchange = () => {
@@ -274,13 +282,14 @@
 
         async function selectExam() {
             const selectedSchool = document.getElementById("schoolSelect").value;
-            const selectedExam = document.getElementById("examSelect").value.split(/_(.*)/);
-            if (selectedSchool == "" || selectedExam == "") {
+            const selectedExamValue = document.getElementById("examSelect").value;
+            if (selectedSchool === "" || selectedExamValue === "") {
+                updateSelectOptions("#groupSelect", "<option value=''>請選擇系組</option>");
+                document.getElementById("userIdInput").value = "";
                 return;
             }
 
-            const examYear = selectedExam[0];
-            const examNo = selectedExam[1];
+            const [examYear, examNo] = selectedExamValue.split(/_(.+)/);
 
             const url = urlHeader + `/getGroupSelect?school=${selectedSchool}&examNo=${examNo}&year=${examYear}`;
 
@@ -295,7 +304,7 @@
             for (const group of groupList) {
                 html += `<option value = ${group.groupNo} >  ${group.name}</option>`
             }
-            document.getElementById("groupSelect").innerHTML = html;
+            updateSelectOptions("#groupSelect", html);
             document.getElementById("userIdInput").value = "";
 
         }
