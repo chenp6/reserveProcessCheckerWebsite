@@ -318,19 +318,26 @@ button:focus-visible {
   height: 16px;
 }
 
+.links,
+a {
+  color: var(--warning);
+}
+
 .links {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
 }
 
-.links a {
-  color: var(--accent-strong);
+.links a,
+a {
   text-decoration: none;
 }
 
 .links a:hover,
-.links a:focus-visible {
+.links a:focus-visible,
+a:hover,
+a:focus-visible {
   text-decoration: underline;
 }
 
