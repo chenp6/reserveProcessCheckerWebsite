@@ -6,7 +6,7 @@
   --text: #dce9ff;
   --muted: #93a3bf;
   --warning: #ffb347;
-  --info: #8bd3ff;
+  --info: #c69cff;
   --success: #8be5b3;
   --danger: #ffa0a0;
   --border: rgba(255, 255, 255, 0.08);
@@ -284,7 +284,7 @@ button:focus-visible {
 
 .alert.info {
   border-color: rgba(139, 211, 255, 0.5);
-  color: var(--info);
+  color: #c69cff;
 }
 
 .alert.success {
