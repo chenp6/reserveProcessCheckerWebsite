@@ -283,8 +283,8 @@ button:focus-visible {
 }
 
 .alert.info {
-  border-color: rgba(139, 211, 255, 0.5);
-  color: #c69cff;
+  border-color: rgba(198, 156, 255, 0.5);
+  color: rgb(198 156 255);
 }
 
 .alert.success {
