@@ -1,24 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hant">
 
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>各校備取進度查詢</title>
-    <link rel="stylesheet" href="./css/loadingHamster.css" type="text/css"> </head>
-<!-- Copyright (C) 2022 Nawsome
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="./css/loadingHamster.css" type="text/css">
+    <link rel="stylesheet" href="./css/style.css" type="text/css">
+</head>
 
-    Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-    
-    The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-    
-    
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.  -->
-
-<body style="font-family: 'Source Code Pro', monospace;">
-    <!-- Copy by https://uiverse.io/Nawsome/wet-mayfly-23 -->
-    <div id="loadingPage" style="height:100vh; width: 100vw ;  position: absolute; z-index:999;  display: flex; gap:2vw; justify-content: center; align-items: center; flex-direction: column; ">
+<body>
+    <div id="loadingPage" class="loading-overlay">
         <div aria-label="Orange and tan hamster running in a metal wheel" role="img" class="wheel-and-hamster">
             <div class="wheel"></div>
             <div class="hamster">
@@ -37,89 +31,154 @@
             </div>
             <div class="spoke"></div>
         </div>
-        <div style="text-align:center">Please wait while the data is loading<br>Thanks for your patient!ヾ(•ω•`)o</div>
+        <div style="text-align:center">Please wait while the data is loading<br>Thanks for your patient!ヾ(•ω•`)o<br>Copyright (C) 2022 Nawsome</div>
     </div>
-    <div id="loadedPage" style="z-index: 1; position: absolute; opacity: 30%;">
-        <nav>
-            <a href="./">快速查詢</a> |
-            <a href="./group.html">多系組查詢</a>
-        </nav>
-        <br>
-        <div style="border: 0.2rem solid;padding: 2vw;">
-            (1)查詢系組備取進度:選擇學校>>選擇考試類別>>選擇系組>>按下【查詢系組備取進度】
-            <br> (2)查詢個人備取進度:選擇學校>>選擇考試類別>>選擇系組>>填入考生編號/准考證號碼>>按下【查詢個人備取進度】
+
+    <div id="loadedPage">
+        <div class="wrapper">
+            <header class="header">
+                <div class="brand">
+                    <div>
+                        <p class="brand-title">各校備取進度查詢(快速查詢)</p>
+                    </div>
+                </div>
+                <nav class="nav" aria-label="主導覽">
+                    <a href="./">快速查詢</a>
+                    <a href="./group.html">多系組查詢</a>
+                    <a href="./notice.html">最新公告</a>
+                </nav>
+            </header>
+
+            <div class="grid">
+                <main class="card">
+                    <h2>查詢條件</h2>
+                    <div class="notice">
+                        <strong>提示：</strong> 選擇學校、考試類別與系組後，就能查詢系組備取進度；輸入考生編號/准考證號碼還可查看個人備取。
+                    </div>
+
+                    <div class="actions">
+                        <div>
+                            <div class="label">學校</div>
+                            <select id="schoolSelect" aria-label="學校選擇">
+                                <option value="">請選擇學校</option>
+                                <option value="NTU">國立臺灣大學</option>
+                                <option value="NYCU">國立陽明交通大學</option>
+                                <option value="NCCU">國立政治大學</option>
+                                <option value="NCKU">國立成功大學</option>
+                                <option value="CCU">國立中正大學</option>
+                                <option value="NCU">國立中央大學</option>
+                                <option value="NSYSU">國立中山大學</option>
+                                <option value="UST">台灣聯合大學系統</option>
+                            </select>
+                        </div>
+                        <div>
+                            <div class="label">考試類別</div>
+                            <select id="examSelect" aria-label="考試類別選擇"></select>
+                        </div>
+                        <div>
+                            <div class="label">系組</div>
+                            <select id="groupSelect" aria-label="系組選擇"></select>
+                        </div>
+                        <div>
+                            <div class="label">考生編號/准考證號碼</div>
+                            <input type="text" id="userIdInput" name="userId" aria-label="考生編號或准考證號碼">
+                        </div>
+                        <div class="links">
+                            <button onclick="getUserRank()">查詢個人備取進度</button>
+                            <button onclick="getReserveProcess()">查詢系組備取進度</button>
+                        </div>
+                    </div>
+
+                    <div id="result" class="result" aria-live="polite"></div>
+                </main>
+
+                <aside class="card">
+                    <h2>公告與提醒</h2>
+                    <div class="alert warn">此網站的遞補資訊僅供參考，若學校未即時更新官方資訊，內容可能有延遲。</div>
+                    <div class="alert">以 112 年台大資工為例：網站僅顯示備取 8，實際遞補至備取約 57 名。</div>
+                    <div class="alert">為節省記憶體空間，可能會移除非當年度之個人備取進度。</div>
+                    <!-- <div class="alert danger">[近期錯誤]</div> -->
+                    <!-- <div class="alert info">[其他公告]</div> -->
+                    <div class="alert success">
+                        [近期錯誤] [已修正] 2025/12/5 - 114中山推甄/114成大推甄-正取招收人數爬蟲錯誤
+                    </div>
+                    <div class="notice">
+                        感謝使用本網站！若方便，歡迎填寫 <a href="https://forms.gle/sHJdbu3zWAKMz4g6A" target="_blank" rel="noopener">滿意度調查問卷</a> 以協助改善體驗。
+                    </div>
+                    <div class="links">
+                        <a href="./notice.html">查看完整公告</a>
+                    </div>
+                </aside>
+            </div>
+
+            <footer style="text-align:center; margin-top: 2rem; font-size: 0.9rem;">
+                <p>
+                    本網站提供資訊僅供參考，請以各校官方公告為準。
+                </p>
+                <p>
+                    開源專案協作：
+                    <a href="https://github.com/chenp6/reserveProcessCheckerWebsite" target="_blank" rel="noopener noreferrer">
+                        協助前端更新
+                    </a>
+                    |
+                    <a href="https://github.com/chenp6/reserveProcessCheckerCrawler" target="_blank" rel="noopener noreferrer">
+                        協助後端更新
+                    </a>
+                </p>
+            </footer>
+
         </div>
-        <br>
-        <select id="schoolSelect">
-        <option value="">
-            請選擇學校
-        </option>
-        <option value="NTU">
-            國立臺灣大學
-        </option>
-        <option value="NYCU">
-            國立陽明交通大學
-        </option>
-        <!-- <option value="NKUST">
-            國立高雄科技大學
-        </option> -->
-        <option value="NCCU">
-            國立政治大學
-        </option>
-        <option value="NCKU">
-            國立成功大學
-        </option>
-        <option value="CCU">
-            國立中正大學
-        </option>
-        <option value="NCU">
-            國立中央大學
-        </option>
-        <option value="NSYSU">
-            國立中山大學
-        </option>
-        <option value="UST">
-            台灣聯合大學系統
-        </option>
-    </select>
-        <select id="examSelect">
-    </select>
-        <select id="groupSelect">
-    </select>
-        <br>
-        <label for="userIdInput">考生編號/准考證號碼:</label>
-        <input type="text" id="userIdInput" value="" name="userId">
-        <br>
-        <button onclick="getUserRank()">查詢個人備取進度</button>
-        <button onclick="getReserveProcess()">查詢系組備取進度</button>
-        <div id="result"></div>
-        <br>
-        <div style="color: red; margin-bottom: 10px;">[小提醒]此網站的遞補資訊僅作參考用
-            <br>
-            <div style="color: black;">由於以下備取進度皆為爬各校遞補網站獲得的，因此若該校沒有更新進度至網站上，則可能網站的資訊是過舊的。</div>
-            所以目前已辦理報到的學生若改為放棄，則有可能依序遞補。
-            <div style="color: black;">舉例來說:112年碩班考試台大網站資工系系統僅更新顯示到備取8，但實際上最後備取至備取57左右</div>
-        </div>
-        <div style="color: blue;">[小提醒]為節省記憶體空間，可能會移除非當年度之個人備取進度
-        </div>
-        <p>感謝大家使用此網站! 如果方便的話，請幫我填寫一下<a href="https://forms.gle/sHJdbu3zWAKMz4g6A" target="_blank">滿意度調查問卷</a>以改善使用者體驗。謝謝您!</p>
-        <p>[近期錯誤] [已修正] 2025/12/5 - 114中山推甄/114成大推甄-正取招收人數爬蟲錯誤</p>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
-        // location.href = "./fix.html";
         let groupInfo = new Map();
-        const urlHeader = "."
+        const urlHeader = ".";
+
+        function initSelect2() {
+            const placeholders = {
+                schoolSelect: "請選擇學校",
+                examSelect: "請選擇考試類別",
+                groupSelect: "請選擇系組"
+            };
+
+            ["#schoolSelect", "#examSelect", "#groupSelect"].forEach((selector) => {
+                const id = selector.replace("#", "");
+                const $select = $(selector);
+                if ($select.hasClass("select2-hidden-accessible")) {
+                    $select.select2("destroy");
+                }
+                $select.select2({
+                    width: "100%",
+                    placeholder: placeholders[id] || "請選擇",
+                    allowClear: true,
+                    language: {
+                        noResults: () => "沒有符合的項目"
+                    }
+                });
+            });
+        }
+
+        function updateSelectOptions(selector, optionsHtml) {
+            const $select = $(selector);
+            $select.html(optionsHtml);
+            $select.val("").trigger("change");
+        }
+
         window.onload = () => {
             onStopLoading();
+            initSelect2();
         }
-        reset();
 
+        reset();
 
         function reset() {
             document.getElementById("schoolSelect").selectedIndex = 0;
             document.getElementById("examSelect").selectedIndex = 0;
             document.getElementById("groupSelect").selectedIndex = 0;
             document.getElementById("userIdInput").value = "";
+            $("#schoolSelect, #examSelect, #groupSelect").val("").trigger("change");
         }
 
         function onLoading() {
@@ -132,10 +191,12 @@
             document.getElementById('loadedPage').style.opacity = "100%";
         }
 
-
         document.getElementById("schoolSelect").onchange = async function selectSchool() {
             const selectedSchool = document.getElementById("schoolSelect").value;
-            if (selectedSchool == "") {
+            if (selectedSchool === "") {
+                updateSelectOptions("#examSelect", "<option value=''>請選擇考試類別</option>");
+                updateSelectOptions("#groupSelect", "<option value=''>請選擇系組</option>");
+                document.getElementById("userIdInput").value = "";
                 return;
             }
             const url = urlHeader + `/getExamSelect?school=${selectedSchool}`;
@@ -150,27 +211,22 @@
             for (const exam of examList) {
                 html += `<option value = "${exam.year}_${exam.examNo}" >  ${exam.name}</option>`
             }
-            document.getElementById("examSelect").innerHTML = html;
-            document.getElementById("groupSelect").innerHTML = "";
+            updateSelectOptions("#examSelect", html);
+            updateSelectOptions("#groupSelect", "<option value=''>請選擇系組</option>");
             document.getElementById("userIdInput").value = "";
         }
-
-
-
 
         document.getElementById("examSelect").onchange = async function selectExam() {
             groupInfo = new Map();
             const selectedSchool = document.getElementById("schoolSelect").value;
-            const selectedExam = document.getElementById("examSelect").value.split(/_(.*)/);
-            if (selectedSchool == "" || selectedExam == "") {
+            const selectedExamValue = document.getElementById("examSelect").value;
+            if (selectedSchool === "" || selectedExamValue === "") {
+                updateSelectOptions("#groupSelect", "<option value=''>請選擇系組</option>");
+                document.getElementById("userIdInput").value = "";
                 return;
             }
 
-
-            const examYear = selectedExam[0];
-            const examNo = selectedExam[1];
-            console.log(examNo)
-            console.log(examYear)
+            const [examYear, examNo] = selectedExamValue.split(/_(.+)/);
 
             onLoading();
             const url = urlHeader + `/getGroupSelect?school=${selectedSchool}&examNo=${examNo}&year=${examYear}`;
@@ -178,7 +234,6 @@
                 method: 'GET',
             })
             const groupList = await res.json();
-            console.log(groupList)
             onStopLoading();
 
             let html = " <option value = '' > 請選擇系組 </option>"
@@ -186,28 +241,22 @@
                 html += `<option value = ${group.groupNo} >  ${group.name}</option>`
                 groupInfo.set(group.groupNo, `已報到人數/正取招收人數:${group.registered}/${group.want}=>備取進度:${group.currentReserve}`);
             }
-            document.getElementById("groupSelect").innerHTML = html;
+            updateSelectOptions("#groupSelect", html);
             document.getElementById("userIdInput").value = "";
 
         }
 
-
-
         async function getUserRank() {
             const selectedSchool = document.getElementById("schoolSelect").value;
-            const selectedExam = document.getElementById("examSelect").value.split(/_(.*)/);
+            const selectedExamValue = document.getElementById("examSelect").value;
             const selectedGroup = document.getElementById("groupSelect").value;
             const userId = document.getElementById("userIdInput").value;
 
-
-
-
-            if (selectedSchool == "" || selectedExam == "" || selectedGroup == "" || userId == "") {
+            if (selectedSchool === "" || selectedExamValue === "" || selectedGroup === "" || userId === "") {
                 return;
             }
 
-            const examYear = selectedExam[0];
-            const examNo = selectedExam[1];
+            const [examYear, examNo] = selectedExamValue.split(/_(.+)/);
 
             const groupId = selectedSchool + "_" + examNo + "_" + selectedGroup;
 
@@ -226,7 +275,6 @@
                 result.innerText = `名次:${userRank.rank} , 報到狀況:${userRank.status}`;
             }
 
-
             const updateTimeUrl = urlHeader + `/getUpdateTime?school=${selectedSchool}&examNo=${examNo}&year=${examYear}`;
             const updateTimeRes = await fetch(updateTimeUrl, {
                 method: 'GET',
@@ -243,17 +291,16 @@
 
         async function getReserveProcess() {
             const selectedSchool = document.getElementById("schoolSelect").value;
-            const selectedExam = document.getElementById("examSelect").value.split(/_(.*)/);
+            const selectedExamValue = document.getElementById("examSelect").value;
             const selectedGroup = document.getElementById("groupSelect").value;
 
-            const examYear = selectedExam[0];
-            const examNo = selectedExam[1];
+            const [examYear, examNo] = selectedExamValue.split(/_(.+)/);
 
 
-            if (selectedSchool == "" || examNo == "" || selectedGroup == "") {
+            if (selectedSchool === "" || selectedExamValue === "" || selectedGroup === "") {
                 return;
             }
-            const groupInput = document.getElementById("groupInput");
+            const result = document.getElementById("result");
             result.innerText = groupInfo.get(selectedGroup);
 
             const updateTimeUrl = urlHeader + `/getUpdateTime?school=${selectedSchool}&examNo=${examNo}&year=${examYear}`;
